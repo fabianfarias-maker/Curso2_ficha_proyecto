@@ -751,9 +751,8 @@
         <!-- BARRA DE NAVEGACIÓN HORIZONTAL STICKY + BADGE DE AUTOGUARDADO -->
         <div class="app-container max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8 mb-3 sticky top-2 z-30 w-full">
             <nav class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-1.5 transition-colors flex items-center justify-between gap-2">
-                <div class="flex items-center space-x-1 sm:space-x-1.5 overflow-x-auto scrollbar-none flex-1 min-w-0">
-
-                    <!-- Pestañas de Edición de Ficha (Estudiantes y Admin) -->
+                <!-- MENÚ DE NAVEGACIÓN PARA PERFIL ESTUDIANTE -->
+                <div id="student-nav-tabs" class="flex items-center space-x-1 sm:space-x-1.5 overflow-x-auto scrollbar-none flex-1 min-w-0">
                     <button type="button" onclick="switchTab('tab-antecedentes')" id="nav-tab-antecedentes" class="tab-btn active px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
                         <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">1</span>
                         <span>ANTECEDENTES</span>
@@ -773,52 +772,72 @@
                         <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">4</span>
                         <span>RESUMEN FICHA</span>
                     </button>
-
-                    <!-- Pestañas Exclusivas de Administrador (admon) -->
-                    <button type="button" onclick="switchTab('tab-admin-dashboard')" id="nav-tab-admin-dashboard" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">📊</span>
-                        <span>DASHBOARD</span>
-                    </button>
-
-                    <button type="button" onclick="setAdminSubView('fichas'); switchTab('tab-admin-fichas')" id="nav-tab-admin-fichas" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">📁</span>
-                        <span>FICHAS Y EXCEL</span>
-                    </button>
-
-                    <button type="button" onclick="setAdminSubView('students'); switchTab('tab-admin-fichas')" id="nav-tab-admin-estudiantes" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
-                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">👥</span>
-                        <span>ESTUDIANTES</span>
-                    </button>
-
                 </div>
 
-                <!-- BADGE SUTIL DE AUTOGUARDADO EN LA BARRA DE NAVEGACIÓN (NO TAPA EL FOOTER) -->
-                <div class="save-badge" id="save-badge" title="Estado de guardado en tiempo real">
+                <!-- MENÚ DE NAVEGACIÓN ADHOC EXCLUSIVO PARA PERFIL ADMINISTRADOR (admon) -->
+                <div id="admin-nav-tabs" class="hidden items-center space-x-1 sm:space-x-1.5 overflow-x-auto scrollbar-none flex-1 min-w-0">
+                    <button type="button" onclick="switchTab('tab-admin-dashboard')" id="nav-tab-admin-dashboard" class="tab-btn admin-tab-btn px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">1</span>
+                        <span>DASHBOARD Y MÉTRICAS</span>
+                    </button>
+
+                    <button type="button" onclick="setAdminSubView('fichas'); switchTab('tab-admin-fichas')" id="nav-tab-admin-fichas" class="tab-btn admin-tab-btn px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">2</span>
+                        <span>FICHAS DE PROYECTOS</span>
+                    </button>
+
+                    <button type="button" onclick="setAdminSubView('students'); switchTab('tab-admin-fichas')" id="nav-tab-admin-estudiantes" class="tab-btn admin-tab-btn px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">3</span>
+                        <span>NÓMINA DE ESTUDIANTES</span>
+                    </button>
+
+                    <button type="button" onclick="switchTab('tab-antecedentes')" id="nav-tab-admin-editor" class="tab-btn admin-tab-btn px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">4</span>
+                        <span>EDITOR DE FICHAS</span>
+                    </button>
+                </div>
+
+                <!-- BADGE SUTIL DE ESTADO EN LA BARRA DE NAVEGACIÓN -->
+                <div class="save-badge" id="save-badge" title="Estado de sincronización en tiempo real">
                     <span class="save-dot"></span>
                     <span id="save-text">Borrador auto-guardado</span>
                 </div>
             </nav>
         </div>
 
-        <!-- BARRA MULTI-EQUIPO: SELECTOR DE PROYECTO ACTIVO Y CREACIÓN DE NUEVA FICHA -->
-        <div id="project-switcher-bar" class="app-container max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8 mb-4 w-full">
-            <div class="surface-card p-3.5 sm:px-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-l-4 border-l-blue-600">
-                <div class="flex items-center gap-3 flex-1 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 font-display font-black text-sm" id="active-project-index-badge">
-                        #1
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2">
-                            <label for="active-project-select" class="text-[11px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                                Ficha de Equipo Activa:
-                            </label>
-                            <span id="total-projects-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                                1 registrada
-                            </span>
+        <!-- BARRA DE EDICIÓN ADMIN: SELECTOR DE PROYECTO ACTIVO Y PASOS DE LA FICHA (VISIBLE SOLO AL EDITAR FICHA EN MODO ADMIN) -->
+        <div id="project-switcher-bar" class="hidden app-container max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8 mb-4 w-full">
+            <div class="surface-card p-3.5 sm:px-5 flex flex-col gap-3 border-l-4 border-l-blue-600">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 flex-1 min-w-0">
+                        <div class="w-9 h-9 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 font-display font-black text-sm" id="active-project-index-badge">
+                            #1
                         </div>
-                        <select id="active-project-select" onchange="handleSwitchActiveProject(this.value)" class="mt-1 w-full sm:max-w-md text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </select>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <label for="active-project-select" class="text-[11px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                                    Editando Ficha de Equipo:
+                                </label>
+                                <span id="total-projects-pill" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                                    1 registrada
+                                </span>
+                            </div>
+                            <select id="active-project-select" onchange="handleSwitchActiveProject(this.value)" class="mt-1 w-full sm:max-w-md text-xs sm:text-sm font-bold bg-slate-100 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </select>
+                        </div>
                     </div>
+                    <button type="button" onclick="setAdminSubView('fichas'); switchTab('tab-admin-fichas')" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-1.5 self-start sm:self-center cursor-pointer">
+                        <span>← Volver a Fichas Registradas</span>
+                    </button>
+                </div>
+
+                <!-- Sub-navegación de apartados de la ficha cuando el Admin edita -->
+                <div class="flex items-center gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-800 flex-wrap">
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mr-1">Apartados:</span>
+                    <button type="button" onclick="switchTab('tab-antecedentes')" id="admin-step-tab-antecedentes" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-blue-600 text-white">1. Antecedentes</button>
+                    <button type="button" onclick="switchTab('tab-solucion')" id="admin-step-tab-solucion" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">2. Propuesta IA</button>
+                    <button type="button" onclick="switchTab('tab-etica')" id="admin-step-tab-etica" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">3. Marco Ético y Legal</button>
+                    <button type="button" onclick="switchTab('tab-resumen')" id="admin-step-tab-resumen" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">4. Resumen Ficha</button>
                 </div>
             </div>
         </div>
@@ -1837,9 +1856,10 @@
             const statusBox = document.getElementById('session-status-box');
             const roleBadge = document.getElementById('session-role-badge');
             const userDisp = document.getElementById('session-user-display');
-            const btnDash = document.getElementById('nav-tab-admin-dashboard');
-            const btnFichas = document.getElementById('nav-tab-admin-fichas');
-            const btnStudents = document.getElementById('nav-tab-admin-estudiantes');
+            const studentNav = document.getElementById('student-nav-tabs');
+            const adminNav = document.getElementById('admin-nav-tabs');
+            const switcherBar = document.getElementById('project-switcher-bar');
+            const saveText = document.getElementById('save-text');
 
             if (!currentSession) {
                 loginSec.classList.remove('hidden');
@@ -1853,23 +1873,32 @@
             statusBox.classList.remove('hidden');
             userDisp.textContent = `Usuario: ${currentSession.user}`;
 
-            const switcherBar = document.getElementById('project-switcher-bar');
             if (currentSession.role === 'admin') {
                 roleBadge.textContent = 'Administrador';
                 roleBadge.className = 'text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-teal-500/25 text-teal-200 border border-teal-400/40';
-                btnDash.classList.remove('hidden');
-                btnFichas.classList.remove('hidden');
-                if (btnStudents) btnStudents.classList.remove('hidden');
-                if (switcherBar) switcherBar.classList.remove('hidden');
+                if (studentNav) {
+                    studentNav.classList.add('hidden');
+                    studentNav.classList.remove('flex');
+                }
+                if (adminNav) {
+                    adminNav.classList.remove('hidden');
+                    adminNav.classList.add('flex');
+                }
+                if (saveText) saveText.textContent = 'Panel Administrador Activo';
                 renderProjectSwitcherUI();
                 populateFormFromActiveProject();
                 switchTab('tab-admin-dashboard');
             } else {
                 roleBadge.textContent = 'Estudiante';
                 roleBadge.className = 'text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/25 text-blue-200 border border-blue-400/30';
-                btnDash.classList.add('hidden');
-                btnFichas.classList.add('hidden');
-                if (btnStudents) btnStudents.classList.add('hidden');
+                if (studentNav) {
+                    studentNav.classList.remove('hidden');
+                    studentNav.classList.add('flex');
+                }
+                if (adminNav) {
+                    adminNav.classList.add('hidden');
+                    adminNav.classList.remove('flex');
+                }
                 if (switcherBar) switcherBar.classList.add('hidden');
                 populateFormFromActiveProject();
                 switchTab('tab-antecedentes');
@@ -1905,8 +1934,39 @@
             if (targetSec) targetSec.classList.remove('hidden');
 
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if (activeBtn) activeBtn.classList.add('active');
+
+            const switcherBar = document.getElementById('project-switcher-bar');
+            const isAdmin = currentSession && currentSession.role === 'admin';
+
+            if (isAdmin) {
+                if (tabId === 'tab-admin-dashboard') {
+                    document.getElementById('nav-tab-admin-dashboard')?.classList.add('active');
+                    if (switcherBar) switcherBar.classList.add('hidden');
+                } else if (tabId === 'tab-admin-fichas') {
+                    if (currentAdminSubView === 'students') {
+                        document.getElementById('nav-tab-admin-estudiantes')?.classList.add('active');
+                    } else {
+                        document.getElementById('nav-tab-admin-fichas')?.classList.add('active');
+                    }
+                    if (switcherBar) switcherBar.classList.add('hidden');
+                } else {
+                    document.getElementById('nav-tab-admin-editor')?.classList.add('active');
+                    if (switcherBar) switcherBar.classList.remove('hidden');
+                    ['tab-antecedentes', 'tab-solucion', 'tab-etica', 'tab-resumen'].forEach(stepId => {
+                        const stepBtn = document.getElementById('admin-step-' + stepId);
+                        if (!stepBtn) return;
+                        if (stepId === tabId) {
+                            stepBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-blue-600 text-white shadow-sm';
+                        } else {
+                            stepBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300';
+                        }
+                    });
+                }
+            } else {
+                const activeBtn = document.getElementById('nav-' + tabId);
+                if (activeBtn) activeBtn.classList.add('active');
+                if (switcherBar) switcherBar.classList.add('hidden');
+            }
 
             if (tabId === 'tab-resumen') {
                 renderFichaPreview();
@@ -1914,6 +1974,7 @@
                 renderAdminDashboard();
             } else if (tabId === 'tab-admin-fichas') {
                 renderAdminProjectsView();
+                renderAdminStudentsView();
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2634,6 +2695,8 @@
             const studentsContainer = document.getElementById('admin-subview-students-container');
             const btnFichas = document.getElementById('admin-subview-btn-fichas');
             const btnStudents = document.getElementById('admin-subview-btn-students');
+            const navFichas = document.getElementById('nav-tab-admin-fichas');
+            const navStudents = document.getElementById('nav-tab-admin-estudiantes');
 
             if (subView === 'students') {
                 if (fichasContainer) fichasContainer.classList.add('hidden');
@@ -2645,6 +2708,10 @@
                 if (btnStudents) {
                     btnStudents.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-blue-600 text-white shadow-sm';
                 }
+                if (currentTab === 'tab-admin-fichas') {
+                    navFichas?.classList.remove('active');
+                    navStudents?.classList.add('active');
+                }
                 renderAdminStudentsView();
             } else {
                 if (fichasContainer) fichasContainer.classList.remove('hidden');
@@ -2655,6 +2722,10 @@
                 }
                 if (btnStudents) {
                     btnStudents.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300';
+                }
+                if (currentTab === 'tab-admin-fichas') {
+                    navStudents?.classList.remove('active');
+                    navFichas?.classList.add('active');
                 }
                 renderAdminProjectsView();
             }
