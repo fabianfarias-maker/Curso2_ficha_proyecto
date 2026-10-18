@@ -3,27 +3,36 @@ const path = require('path');
 
 const TMP_FILE = path.join('/tmp', 'iplacex_fichas_proyectos_db.json');
 
-if (!global.__IPLACEX_FICHAS_MEM) {
-  global.__IPLACEX_FICHAS_MEM = null;
+if (!global.__IPLACEX_FICHAS_STATE) {
+  global.__IPLACEX_FICHAS_STATE = { projects: [], lastResetAt: 0, deletedIds: {} };
 }
 
-function readLocalTmp() {
+function readState() {
   try {
     if (fs.existsSync(TMP_FILE)) {
       const raw = fs.readFileSync(TMP_FILE, 'utf8');
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) {
+        return { projects: parsed, lastResetAt: 0, deletedIds: {} };
+      }
+      if (parsed && Array.isArray(parsed.projects)) {
+        return {
+          projects: parsed.projects,
+          lastResetAt: parsed.lastResetAt || 0,
+          deletedIds: parsed.deletedIds || {}
+        };
+      }
     }
   } catch (err) {
     console.warn('Warn reading /tmp db:', err.message);
   }
-  return global.__IPLACEX_FICHAS_MEM || [];
+  return global.__IPLACEX_FICHAS_STATE || { projects: [], lastResetAt: 0, deletedIds: {} };
 }
 
-function writeLocalTmp(projects) {
-  global.__IPLACEX_FICHAS_MEM = projects;
+function writeState(state) {
+  global.__IPLACEX_FICHAS_STATE = state;
   try {
-    fs.writeFileSync(TMP_FILE, JSON.stringify(projects, null, 2), 'utf8');
+    fs.writeFileSync(TMP_FILE, JSON.stringify(state, null, 2), 'utf8');
   } catch (err) {
     console.warn('Warn writing /tmp db:', err.message);
   }
@@ -38,13 +47,17 @@ function isProjectValid(p) {
   return Boolean(hasTeam && hasTitle && hasMembers);
 }
 
-function mergeProjectsList(existingList, incomingList) {
+function mergeProjectsList(existingList, incomingList, lastResetAt, deletedIds) {
   const map = new Map();
   (existingList || []).forEach(p => {
-    if (p && p.id && isProjectValid(p)) map.set(p.id, p);
+    if (p && p.id && isProjectValid(p) && !deletedIds[p.id]) {
+      map.set(p.id, p);
+    }
   });
   (incomingList || []).forEach(inc => {
     if (!inc || !inc.id || !isProjectValid(inc)) return;
+    if (deletedIds[inc.id]) return;
+    if (lastResetAt && (inc.updatedAt || inc.createdAt || 0) < lastResetAt) return;
     const prev = map.get(inc.id);
     if (!prev || (inc.updatedAt || 0) >= (prev.updatedAt || 0)) {
       map.set(inc.id, inc);
@@ -63,12 +76,13 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  let projects = readLocalTmp();
+  const state = readState();
 
   if (req.method === 'GET') {
     return res.status(200).json({
       ok: true,
-      projects,
+      projects: state.projects,
+      lastResetAt: state.lastResetAt || 0,
       serverTime: Date.now()
     });
   }
@@ -79,29 +93,33 @@ module.exports = async (req, res) => {
 
     if (action === 'upsert' && body.project && body.project.id) {
       if (!isProjectValid(body.project)) {
-        return res.status(200).json({ ok: true, projects, note: 'Proyecto en borrador no publicado en servidor' });
+        return res.status(200).json({ ok: true, projects: state.projects, lastResetAt: state.lastResetAt });
       }
-      projects = mergeProjectsList(projects, [body.project]);
-      writeLocalTmp(projects);
-      return res.status(200).json({ ok: true, projects });
+      delete state.deletedIds[body.project.id];
+      state.projects = mergeProjectsList(state.projects, [body.project], 0, state.deletedIds);
+      writeState(state);
+      return res.status(200).json({ ok: true, projects: state.projects, lastResetAt: state.lastResetAt });
     }
 
     if (action === 'bulk_merge' && Array.isArray(body.projects)) {
-      projects = mergeProjectsList(projects, body.projects);
-      writeLocalTmp(projects);
-      return res.status(200).json({ ok: true, projects });
+      state.projects = mergeProjectsList(state.projects, body.projects, state.lastResetAt, state.deletedIds);
+      writeState(state);
+      return res.status(200).json({ ok: true, projects: state.projects, lastResetAt: state.lastResetAt });
     }
 
     if (action === 'delete' && body.id) {
-      projects = projects.filter(p => p.id !== body.id);
-      writeLocalTmp(projects);
-      return res.status(200).json({ ok: true, projects });
+      state.deletedIds[body.id] = Date.now();
+      state.projects = state.projects.filter(p => p.id !== body.id);
+      writeState(state);
+      return res.status(200).json({ ok: true, projects: state.projects, lastResetAt: state.lastResetAt });
     }
 
     if (action === 'reset') {
-      projects = [];
-      writeLocalTmp(projects);
-      return res.status(200).json({ ok: true, projects });
+      state.projects = [];
+      state.lastResetAt = Date.now();
+      state.deletedIds = {};
+      writeState(state);
+      return res.status(200).json({ ok: true, projects: [], lastResetAt: state.lastResetAt });
     }
 
     return res.status(400).json({ ok: false, error: 'Acción inválida o datos incompletos' });
