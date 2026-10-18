@@ -29,13 +29,22 @@ function writeLocalTmp(projects) {
   }
 }
 
+function isProjectValid(p) {
+  if (!p || !p.id) return false;
+  if (p.isRegistered) return true;
+  const hasTeam = typeof p.teamName === 'string' && p.teamName.trim().length >= 2;
+  const hasTitle = typeof p.projectTitle === 'string' && p.projectTitle.trim().length >= 2;
+  const hasMembers = Array.isArray(p.members) && p.members.some(m => typeof m === 'string' && m.trim().length >= 2);
+  return Boolean(hasTeam && hasTitle && hasMembers);
+}
+
 function mergeProjectsList(existingList, incomingList) {
   const map = new Map();
   (existingList || []).forEach(p => {
-    if (p && p.id) map.set(p.id, p);
+    if (p && p.id && isProjectValid(p)) map.set(p.id, p);
   });
   (incomingList || []).forEach(inc => {
-    if (!inc || !inc.id) return;
+    if (!inc || !inc.id || !isProjectValid(inc)) return;
     const prev = map.get(inc.id);
     if (!prev || (inc.updatedAt || 0) >= (prev.updatedAt || 0)) {
       map.set(inc.id, inc);
@@ -69,6 +78,9 @@ module.exports = async (req, res) => {
     const action = body.action || 'upsert';
 
     if (action === 'upsert' && body.project && body.project.id) {
+      if (!isProjectValid(body.project)) {
+        return res.status(200).json({ ok: true, projects, note: 'Proyecto en borrador no publicado en servidor' });
+      }
       projects = mergeProjectsList(projects, [body.project]);
       writeLocalTmp(projects);
       return res.status(200).json({ ok: true, projects });
