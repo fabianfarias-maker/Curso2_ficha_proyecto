@@ -1394,8 +1394,8 @@
                 <a href="https://www.iplacex.cl" target="_blank" rel="noopener noreferrer" class="app-footer-link">Sitio Institucional</a>
                 <a href="https://portalbibliotecadigital.iplacex.cl/" target="_blank" rel="noopener noreferrer" class="app-footer-link">Biblioteca Digital</a>
 
-                <!-- Botón pequeño con forma de pieza de ajedrez caballo -->
-                <button type="button" class="btn-chess-knight" id="btn-admin-reset" onclick="openResetModal()" title="Restablecer plataforma (Requiere clave)" aria-label="Restablecer plataforma">
+                <!-- Botón pequeño con forma de pieza de ajedrez caballo (Habilitado para perfil admon) -->
+                <button type="button" class="btn-chess-knight" id="btn-admin-reset" onclick="openResetModal()" title="Borrar todos los datos de la plataforma (Perfil Admon)" aria-label="Restablecer plataforma">
                     <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 22H5"/>
                         <path d="M7 22v-3.5c0-1.5 1-2.5 2.5-3.5C8.5 14.5 7.5 13.5 7.5 11c0-2 1.5-5 5.5-7 .5 1.5 0 3-1 4 2 0 4 1 4.5 3 .5 2 0 3.5-1 4.5 1.5 1 2.5 2 2.5 3v3.5"/>
@@ -1419,6 +1419,7 @@
                 <button type="button" onclick="closeDetailModal()" class="p-1.5 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 cursor-pointer">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
+            </div>
             <div id="detail-modal-body" class="space-y-4 text-xs sm:text-sm"></div>
             <div class="mt-5 pt-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 flex-wrap">
                 <button type="button" id="detail-modal-delete-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
@@ -1438,7 +1439,7 @@
     </div>
 
     <!-- =========================================================================
-         MODAL DE REINICIO DE PLATAFORMA (PROTEGIDO POR CONTRASEÑA ADMIN)
+         MODAL DE REINICIO DE PLATAFORMA (EXCLUSIVO PERFIL ADMON)
          ========================================================================= -->
     <div id="reset-modal-backdrop" class="modal-overlay" style="display: none;" onclick="if(event.target === this) closeResetModal()">
         <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-reset-title">
@@ -1449,19 +1450,22 @@
                         <path d="M7 22v-3.5c0-1.5 1-2.5 2.5-3.5C8.5 14.5 7.5 13.5 7.5 11c0-2 1.5-5 5.5-7 .5 1.5 0 3-1 4 2 0 4 1 4.5 3 .5 2 0 3.5-1 4.5 1.5 1 2.5 2 2.5 3v3.5"/>
                     </svg>
                 </div>
-                <h3 class="text-base font-display font-bold" id="modal-reset-title">Restablecer Base de Fichas</h3>
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 dark:text-rose-400 block">Acción de Administrador</span>
+                    <h3 class="text-base font-display font-bold" id="modal-reset-title">Borrar Todos los Datos de la Plataforma</h3>
+                </div>
             </div>
-            <p class="text-xs text-slate-600 dark:text-slate-300 mb-3 leading-relaxed">
-                Ingresa la contraseña de administrador (<code class="font-bold">hipopotamo</code>) para limpiar todas las fichas registradas y reiniciar la plataforma a cero.
+            <p class="text-xs text-slate-600 dark:text-slate-300 mb-3 leading-relaxed" id="reset-modal-desc">
+                Esta acción eliminará permanentemente todas las fichas de proyectos y la nómina de estudiantes registrados en la plataforma, dejando la base de datos en cero.
             </p>
-            <div class="mb-4 space-y-1.5">
-                <label for="reset-pass-input" class="block text-xs font-bold">Contraseña de Administrador:</label>
-                <input type="password" id="reset-pass-input" onkeydown="if(event.key==='Enter') submitResetPlatform()" class="app-input" placeholder="Ingresa la contraseña..." autocomplete="off">
+            <div class="mb-4 space-y-1.5" id="reset-pass-wrapper">
+                <label for="reset-pass-input" class="block text-xs font-bold">Confirma con tu contraseña de Administrador (<code class="font-bold">hipopotamo</code>):</label>
+                <input type="password" id="reset-pass-input" onkeydown="if(event.key==='Enter') submitResetPlatform()" class="app-input" placeholder="Ingresa la contraseña o presiona Borrar Todo..." autocomplete="off">
                 <p id="reset-error-msg" class="text-xs text-rose-500 font-semibold hidden">Contraseña incorrecta.</p>
             </div>
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="closeResetModal()" class="px-3.5 py-2 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-700 cursor-pointer">Cancelar</button>
-                <button type="button" onclick="submitResetPlatform()" class="px-4 py-2 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white cursor-pointer">Borrar Todo</button>
+                <button type="button" onclick="submitResetPlatform()" class="px-4 py-2 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-sm cursor-pointer">Borrar Todos los Datos</button>
             </div>
         </div>
     </div>
@@ -1638,6 +1642,22 @@
             return Boolean(hasTeam && hasTitle && validMembers.length >= 1);
         }
 
+        function isNonEmptyProject(proj) {
+            if (!proj) return false;
+            if (proj.isRegistered || hasMinimumProjectData(proj)) return true;
+            const hasTitle = (proj.projectTitle || '').trim().length > 0;
+            const hasProblem = (proj.problem || '').trim().length > 0;
+            const hasObjective = (proj.objective || '').trim().length > 0;
+            const hasMembers = (proj.members || []).some(m => (m || '').trim().length > 0);
+            const hasModel = (proj.aiModel || '').trim().length > 0;
+            const hasTool = (proj.toolType || '').trim().length > 0;
+            return Boolean(hasTitle || hasProblem || hasObjective || hasMembers || hasModel || hasTool);
+        }
+
+        function getAdminVisibleProjects() {
+            return projectsList.filter(isNonEmptyProject);
+        }
+
         function triggerSaveBadgeFeedback() {
             const proj = getActiveProject();
             const saveText = document.getElementById('save-text');
@@ -1717,6 +1737,7 @@
                             if (currentTab.startsWith('tab-admin')) {
                                 renderAdminDashboard();
                                 renderAdminProjectsView();
+                                renderAdminStudentsView();
                             }
                         }
                     }
@@ -1732,12 +1753,34 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data && Array.isArray(data.projects)) {
-                        // Si tenemos proyectos locales que aún no están en el servidor, sincronizarlos
-                        if (projectsList.length > 0) {
+                        const serverResetAt = Number(data.lastResetAt || 0);
+                        const deletedSet = new Set(Array.isArray(data.deletedIds) ? data.deletedIds : []);
+
+                        if (serverResetAt > 0 || deletedSet.size > 0) {
+                            const beforeLen = projectsList.length;
+                            projectsList = projectsList.filter(p => {
+                                if (!p || deletedSet.has(p.id)) return false;
+                                if (serverResetAt > 0 && (p.updatedAt || p.createdAt || 0) < serverResetAt && isNonEmptyProject(p)) {
+                                    return false;
+                                }
+                                return true;
+                            });
+                            if (projectsList.length === 0) {
+                                projectsList = [createBlankProject(1)];
+                                activeProjectId = projectsList[0].id;
+                            }
+                            if (projectsList.length !== beforeLen) {
+                                saveLocalProjectsArray(projectsList);
+                            }
+                        }
+
+                        // Sincronizar únicamente proyectos locales válidos que cumplan requisitos mínimos
+                        const validLocalToPush = projectsList.filter(p => p && (p.isRegistered || hasMinimumProjectData(p)));
+                        if (validLocalToPush.length > 0) {
                             await fetch('/api/projects', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ action: 'bulk_merge', projects: projectsList })
+                                body: JSON.stringify({ action: 'bulk_merge', projects: validLocalToPush })
                             }).then(r => r.ok ? r.json() : null).then(mergedData => {
                                 if (mergedData && Array.isArray(mergedData.projects)) {
                                     mergeIncomingProjects(mergedData.projects);
@@ -1751,6 +1794,7 @@
                         if (currentTab.startsWith('tab-admin')) {
                             renderAdminDashboard();
                             renderAdminProjectsView();
+                            renderAdminStudentsView();
                         }
                         if (showNotification) showToast('Sincronización completada con éxito.', 'success');
                         return;
@@ -1779,6 +1823,7 @@
                             if (currentTab.startsWith('tab-admin')) {
                                 renderAdminDashboard();
                                 renderAdminProjectsView();
+                                renderAdminStudentsView();
                             }
                         }
                     } else if (msg.type === 'PROJECTS_RESET') {
@@ -1788,6 +1833,7 @@
                         if (currentTab.startsWith('tab-admin')) {
                             renderAdminDashboard();
                             renderAdminProjectsView();
+                            renderAdminStudentsView();
                         }
                     }
                 };
@@ -1802,6 +1848,7 @@
                             if (currentTab.startsWith('tab-admin')) {
                                 renderAdminDashboard();
                                 renderAdminProjectsView();
+                                renderAdminStudentsView();
                             }
                         }
                     } catch (err) {}
@@ -1860,11 +1907,13 @@
             const adminNav = document.getElementById('admin-nav-tabs');
             const switcherBar = document.getElementById('project-switcher-bar');
             const saveText = document.getElementById('save-text');
+            const btnAdminReset = document.getElementById('btn-admin-reset');
 
             if (!currentSession) {
                 loginSec.classList.remove('hidden');
                 appWrap.classList.add('hidden');
                 statusBox.classList.add('hidden');
+                if (btnAdminReset) btnAdminReset.style.display = 'none';
                 return;
             }
 
@@ -1884,6 +1933,9 @@
                     adminNav.classList.remove('hidden');
                     adminNav.classList.add('flex');
                 }
+                if (btnAdminReset) {
+                    btnAdminReset.style.display = 'inline-flex';
+                }
                 if (saveText) saveText.textContent = 'Panel Administrador Activo';
                 renderProjectSwitcherUI();
                 populateFormFromActiveProject();
@@ -1898,6 +1950,9 @@
                 if (adminNav) {
                     adminNav.classList.add('hidden');
                     adminNav.classList.remove('flex');
+                }
+                if (btnAdminReset) {
+                    btnAdminReset.style.display = 'none';
                 }
                 if (switcherBar) switcherBar.classList.add('hidden');
                 populateFormFromActiveProject();
@@ -2484,7 +2539,8 @@
         // 7. PANEL DE ADMINISTRACIÓN: DASHBOARD Y EXPLORADOR DE FICHAS
         // ---------------------------------------------------------------------
         function renderAdminDashboard() {
-            const totalProjects = projectsList.length;
+            const visibleProjects = getAdminVisibleProjects();
+            const totalProjects = visibleProjects.length;
             let totalMembers = 0;
             let sumCompletion = 0;
             let completedCount = 0;
@@ -2493,7 +2549,7 @@
             const solutionCounts = {};
             const techCounts = {};
 
-            projectsList.forEach(p => {
+            visibleProjects.forEach(p => {
                 const validMembers = (p.members || []).filter(m => m && m.trim()).length;
                 totalMembers += validMembers;
                 const pct = calculateProjectCompletion(p);
@@ -2548,28 +2604,37 @@
 
             // Render lista de completitud por equipo
             const compList = document.getElementById('chart-completion-list');
-            compList.innerHTML = projectsList.map((p, idx) => {
-                const pct = calculateProjectCompletion(p);
-                const title = p.projectTitle && p.projectTitle.trim() ? p.projectTitle.trim() : 'Proyecto sin título';
-                const team = p.teamName && p.teamName.trim() ? p.teamName.trim() : `Equipo ${idx + 1}`;
-                return `
-                    <div class="space-y-1">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-bold truncate pr-2">${escapeHtml(team)}: <span class="font-normal text-slate-500">${escapeHtml(title)}</span></span>
-                            <span class="font-extrabold ${pct === 100 ? 'text-emerald-600' : 'text-blue-600'}">${pct}%</span>
+            if (visibleProjects.length === 0) {
+                compList.innerHTML = `<div class="text-xs text-slate-500 py-4 text-center">No hay proyectos registrados en la plataforma.</div>`;
+            } else {
+                compList.innerHTML = visibleProjects.map((p, idx) => {
+                    const pct = calculateProjectCompletion(p);
+                    const title = p.projectTitle && p.projectTitle.trim() ? p.projectTitle.trim() : 'Proyecto sin título';
+                    const team = p.teamName && p.teamName.trim() ? p.teamName.trim() : `Equipo ${idx + 1}`;
+                    return `
+                        <div class="space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold truncate pr-2">${escapeHtml(team)}: <span class="font-normal text-slate-500">${escapeHtml(title)}</span></span>
+                                <span class="font-extrabold ${pct === 100 ? 'text-emerald-600' : 'text-blue-600'}">${pct}%</span>
+                            </div>
+                            <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full ${pct === 100 ? 'bg-emerald-500' : 'bg-blue-600'}" style="width: ${pct}%"></div>
+                            </div>
                         </div>
-                        <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div class="h-full ${pct === 100 ? 'bg-emerald-500' : 'bg-blue-600'}" style="width: ${pct}%"></div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+                    `;
+                }).join('');
+            }
+            updateAdminCountsBadges();
         }
 
         function renderBarChart(containerId, countsObj, totalRef, barColorClass) {
             const container = document.getElementById(containerId);
             if (!container) return;
             const entries = Object.entries(countsObj).sort((a, b) => b[1] - a[1]);
+            if (entries.length === 0) {
+                container.innerHTML = `<div class="text-xs text-slate-500 py-4 text-center">Sin datos registrados aún.</div>`;
+                return;
+            }
             const maxVal = Math.max(...entries.map(e => e[1]), 1);
 
             container.innerHTML = entries.map(([label, count]) => {
@@ -2636,7 +2701,8 @@
             const solFilter = document.getElementById('admin-filter-solution')?.value || '';
             const modFilter = document.getElementById('admin-filter-model')?.value || '';
 
-            const filtered = projectsList.filter(p => {
+            const visibleProjects = getAdminVisibleProjects();
+            const filtered = visibleProjects.filter(p => {
                 if (solFilter && p.toolType !== solFilter) return false;
                 if (modFilter && p.aiModel !== modFilter) return false;
                 if (q) {
@@ -2679,10 +2745,11 @@
         function updateAdminCountsBadges() {
             const badgeProj = document.getElementById('badge-count-projects');
             const badgeStud = document.getElementById('badge-count-students');
-            if (badgeProj) badgeProj.textContent = projectsList.length;
+            const visibleProjects = getAdminVisibleProjects();
+            if (badgeProj) badgeProj.textContent = visibleProjects.length;
 
             let totalStudents = 0;
-            projectsList.forEach(p => {
+            visibleProjects.forEach(p => {
                 const members = (p.members || []).map(m => (m || '').trim()).filter(Boolean);
                 totalStudents += members.length;
             });
@@ -2792,7 +2859,8 @@
             let allStudents = [];
             const teamsSet = new Set();
 
-            projectsList.forEach((p, pIdx) => {
+            const visibleProjects = getAdminVisibleProjects();
+            visibleProjects.forEach((p, pIdx) => {
                 const team = (p.teamName || `Equipo ${pIdx + 1}`).trim();
                 const projTitle = (p.projectTitle || 'Sin título aún').trim();
                 const solution = getFormattedSolutionType(p);
@@ -3300,8 +3368,19 @@
         }
 
         function openResetModal() {
-            document.getElementById('reset-pass-input').value = '';
-            document.getElementById('reset-error-msg').classList.add('hidden');
+            if (!currentSession || currentSession.role !== 'admin') {
+                showToast('Esta función está habilitada exclusivamente para el perfil Administrador (admon).', 'warning');
+                return;
+            }
+            const passInput = document.getElementById('reset-pass-input');
+            const errMsg = document.getElementById('reset-error-msg');
+            const passWrapper = document.getElementById('reset-pass-wrapper');
+            if (passInput) passInput.value = '';
+            if (errMsg) errMsg.classList.add('hidden');
+            // Si ya inició sesión como admon, puede confirmar directamente sin re-digitar contraseña
+            if (passWrapper) {
+                passWrapper.classList.add('hidden');
+            }
             document.getElementById('reset-modal-backdrop').style.display = 'flex';
         }
 
@@ -3310,11 +3389,16 @@
         }
 
         async function submitResetPlatform() {
-            const val = document.getElementById('reset-pass-input').value;
-            if (val !== AUTH_CREDENTIALS.admin.pass) {
-                document.getElementById('reset-error-msg').classList.remove('hidden');
+            const isAdminSession = Boolean(currentSession && currentSession.role === 'admin');
+            const val = (document.getElementById('reset-pass-input')?.value || '').trim();
+            if (!isAdminSession && val !== AUTH_CREDENTIALS.admin.pass) {
+                document.getElementById('reset-error-msg')?.classList.remove('hidden');
                 return;
             }
+
+            // Limpiar almacenamiento local y crear borrador limpio para el editor
+            localStorage.removeItem(STORAGE_PROJECTS_KEY);
+            localStorage.removeItem(STORAGE_ACTIVE_ID_KEY);
             const fresh = createBlankProject(1);
             projectsList = [fresh];
             activeProjectId = fresh.id;
@@ -3335,12 +3419,13 @@
 
             populateFormFromActiveProject();
             renderProjectSwitcherUI();
-            if (currentTab.startsWith('tab-admin')) {
-                renderAdminDashboard();
-                renderAdminProjectsView();
-            }
+            renderAdminDashboard();
+            renderAdminProjectsView();
+            renderAdminStudentsView();
+            updateAdminCountsBadges();
             closeResetModal();
-            showToast('Plataforma restablecida a cero.', 'info');
+            playTone(580, 0.14);
+            showToast('Todos los datos de la plataforma han sido borrados correctamente.', 'success');
         }
 
         function showToast(message, type = 'info') {
