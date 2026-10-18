@@ -780,9 +780,14 @@
                         <span>DASHBOARD</span>
                     </button>
 
-                    <button type="button" onclick="switchTab('tab-admin-fichas')" id="nav-tab-admin-fichas" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                    <button type="button" onclick="setAdminSubView('fichas'); switchTab('tab-admin-fichas')" id="nav-tab-admin-fichas" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
                         <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">📁</span>
                         <span>FICHAS Y EXCEL</span>
+                    </button>
+
+                    <button type="button" onclick="setAdminSubView('students'); switchTab('tab-admin-fichas')" id="nav-tab-admin-estudiantes" class="tab-btn admin-tab-btn hidden px-3.5 py-2 rounded-lg font-display font-bold text-xs sm:text-sm tracking-wide flex items-center gap-2 whitespace-nowrap cursor-pointer">
+                        <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black">👥</span>
+                        <span>ESTUDIANTES</span>
                     </button>
 
                 </div>
@@ -1168,61 +1173,104 @@
                         </div>
                     </div>
 
-                    <!-- Filtros y Buscador Admin -->
-                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-5">
-                        <div class="sm:col-span-6">
-                            <input type="text" id="admin-search-input" oninput="renderAdminProjectsView()" class="app-input" placeholder="Buscar por nombre de proyecto, integrante, problema o target...">
+                    <!-- Selector de Sub-Vista Admin: Fichas vs Estudiantes -->
+                    <div class="flex items-center gap-2 mb-4 border-b border-slate-200 dark:border-slate-800 pb-3 flex-wrap">
+                        <button type="button" id="admin-subview-btn-fichas" onclick="setAdminSubView('fichas')" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-blue-600 text-white shadow-sm">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            <span>Fichas de Proyectos</span>
+                            <span id="badge-count-projects" class="text-[10px] px-1.5 py-0.2 rounded-full bg-white/25 text-white font-extrabold">0</span>
+                        </button>
+                        <button type="button" id="admin-subview-btn-students" onclick="setAdminSubView('students')" class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300">
+                            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                            <span>Nómina de Estudiantes</span>
+                            <span id="badge-count-students" class="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-300 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-extrabold">0</span>
+                        </button>
+                    </div>
+
+                    <!-- SUB-VISTA 1: FICHAS DE PROYECTOS -->
+                    <div id="admin-subview-fichas-container">
+                        <!-- Filtros y Buscador Admin -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
+                            <div class="sm:col-span-6">
+                                <input type="text" id="admin-search-input" oninput="renderAdminProjectsView()" class="app-input" placeholder="Buscar por nombre de proyecto, integrante, problema o target...">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <select id="admin-filter-solution" onchange="renderAdminProjectsView()" class="app-input">
+                                    <option value="">Todos los Tipos de Solución</option>
+                                    <option value="Artefacto Interactivo">Artefacto Interactivo</option>
+                                    <option value="Plataforma web / Aplicación">Plataforma web / Aplicación</option>
+                                    <option value="Dashboard / Panel de gestión">Dashboard / Panel de gestión</option>
+                                    <option value="Script / Automatización">Script / Automatización</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-3">
+                                <select id="admin-filter-model" onchange="renderAdminProjectsView()" class="app-input">
+                                    <option value="">Todos los Modelos IA</option>
+                                    <option value="ChatGPT">ChatGPT</option>
+                                    <option value="Gemini">Gemini</option>
+                                    <option value="Claude">Claude</option>
+                                    <option value="Copilot">Copilot</option>
+                                    <option value="DeepSeek">DeepSeek</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="sm:col-span-3">
-                            <select id="admin-filter-solution" onchange="renderAdminProjectsView()" class="app-input">
-                                <option value="">Todos los Tipos de Solución</option>
-                                <option value="Artefacto Interactivo">Artefacto Interactivo</option>
-                                <option value="Plataforma web / Aplicación">Plataforma web / Aplicación</option>
-                                <option value="Dashboard / Panel de gestión">Dashboard / Panel de gestión</option>
-                                <option value="Script / Automatización">Script / Automatización</option>
-                                <option value="Otro">Otro</option>
-                            </select>
+
+                        <!-- Tabla Resumen en Una Sola Visualización (Sin Scroll Horizontal) -->
+                        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 mb-6 w-full">
+                            <table class="w-full text-left border-collapse text-[11px] table-fixed">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700">
+                                        <th class="py-2.5 px-2 font-extrabold w-[19%]">PROYECTO</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[15%]">INTEGRANTES</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[16%]">PROBLEMA</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[10%]">TARGET</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[16%]">OBJETIVO</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[11%]">SOLUCIÓN</th>
+                                        <th class="py-2.5 px-2 font-extrabold w-[7%]">MODELO</th>
+                                        <th class="py-2.5 px-2 font-extrabold text-right w-[6%]">ACCIÓN</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-projects-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
+                                    <!-- Renderizado dinámico -->
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="sm:col-span-3">
-                            <select id="admin-filter-model" onchange="renderAdminProjectsView()" class="app-input">
-                                <option value="">Todos los Modelos IA</option>
-                                <option value="ChatGPT">ChatGPT</option>
-                                <option value="Gemini">Gemini</option>
-                                <option value="Claude">Claude</option>
-                                <option value="Copilot">Copilot</option>
-                                <option value="DeepSeek">DeepSeek</option>
-                                <option value="Otro">Otro</option>
-                            </select>
+
+                        <!-- Tarjetas Detalladas de Fichas -->
+                        <h3 class="text-sm font-display font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
+                            Tarjetas Detalladas por Equipo (Incluye Estructura Técnica y Marco Ético-Normativo)
+                        </h3>
+                        <div id="admin-projects-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Renderizado dinámico -->
                         </div>
                     </div>
 
-                    <!-- Tabla Resumen de Columnas Oficiales de Excel -->
-                    <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800 mb-6">
-                        <table class="w-full text-left border-collapse text-xs">
-                            <thead>
-                                <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[11px] border-b border-slate-200 dark:border-slate-700">
-                                    <th class="py-3 px-3.5 font-extrabold">Nombre de Proyecto</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Integrantes</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Problema/Necesidad</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Target</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Objetivo</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Tipo de Solución</th>
-                                    <th class="py-3 px-3.5 font-extrabold">Modelo Utilizado</th>
-                                    <th class="py-3 px-3.5 font-extrabold text-right">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-projects-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
-                                <!-- Renderizado dinámico -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <!-- SUB-VISTA 2: NÓMINA DE ESTUDIANTES REGISTRADOS POR PROYECTO -->
+                    <div id="admin-subview-students-container" class="hidden">
+                        <div class="mb-4">
+                            <input type="text" id="admin-students-search-input" oninput="renderAdminStudentsView()" class="app-input" placeholder="Buscar estudiante por nombre, equipo o proyecto...">
+                        </div>
 
-                    <!-- Tarjetas Detalladas de Fichas -->
-                    <h3 class="text-sm font-display font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3">
-                        Tarjetas Detalladas por Equipo (Incluye Estructura Técnica y Marco Ético-Normativo)
-                    </h3>
-                    <div id="admin-projects-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Renderizado dinámico -->
+                        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 mb-6 w-full">
+                            <table class="w-full text-left border-collapse text-[11px] table-fixed">
+                                <thead>
+                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700">
+                                        <th class="py-2.5 px-3 font-extrabold w-[6%]">N°</th>
+                                        <th class="py-2.5 px-3 font-extrabold w-[25%]">ESTUDIANTE</th>
+                                        <th class="py-2.5 px-3 font-extrabold w-[18%]">EQUIPO</th>
+                                        <th class="py-2.5 px-3 font-extrabold w-[25%]">PROYECTO</th>
+                                        <th class="py-2.5 px-3 font-extrabold w-[14%]">TIPO SOLUCIÓN</th>
+                                        <th class="py-2.5 px-3 font-extrabold w-[6%]">MODELO</th>
+                                        <th class="py-2.5 px-3 font-extrabold text-right w-[6%]">FICHA</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-students-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
+                                    <!-- Renderizado dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1707,6 +1755,7 @@
             const userDisp = document.getElementById('session-user-display');
             const btnDash = document.getElementById('nav-tab-admin-dashboard');
             const btnFichas = document.getElementById('nav-tab-admin-fichas');
+            const btnStudents = document.getElementById('nav-tab-admin-estudiantes');
 
             if (!currentSession) {
                 loginSec.classList.remove('hidden');
@@ -1726,6 +1775,7 @@
                 roleBadge.className = 'text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-teal-500/25 text-teal-200 border border-teal-400/40';
                 btnDash.classList.remove('hidden');
                 btnFichas.classList.remove('hidden');
+                if (btnStudents) btnStudents.classList.remove('hidden');
                 if (switcherBar) switcherBar.classList.remove('hidden');
                 renderProjectSwitcherUI();
                 populateFormFromActiveProject();
@@ -1735,6 +1785,7 @@
                 roleBadge.className = 'text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-blue-500/25 text-blue-200 border border-blue-400/30';
                 btnDash.classList.add('hidden');
                 btnFichas.classList.add('hidden');
+                if (btnStudents) btnStudents.classList.add('hidden');
                 if (switcherBar) switcherBar.classList.add('hidden');
                 populateFormFromActiveProject();
                 switchTab('tab-antecedentes');
@@ -2418,10 +2469,123 @@
             });
         }
 
+        let currentAdminSubView = 'fichas';
+
+        function updateAdminCountsBadges() {
+            const badgeProj = document.getElementById('badge-count-projects');
+            const badgeStud = document.getElementById('badge-count-students');
+            if (badgeProj) badgeProj.textContent = projectsList.length;
+
+            let totalStudents = 0;
+            projectsList.forEach(p => {
+                const members = (p.members || []).map(m => (m || '').trim()).filter(Boolean);
+                totalStudents += members.length;
+            });
+            if (badgeStud) badgeStud.textContent = totalStudents;
+        }
+
+        function setAdminSubView(subView) {
+            currentAdminSubView = subView;
+            const fichasContainer = document.getElementById('admin-subview-fichas-container');
+            const studentsContainer = document.getElementById('admin-subview-students-container');
+            const btnFichas = document.getElementById('admin-subview-btn-fichas');
+            const btnStudents = document.getElementById('admin-subview-btn-students');
+
+            if (subView === 'students') {
+                if (fichasContainer) fichasContainer.classList.add('hidden');
+                if (studentsContainer) studentsContainer.classList.remove('hidden');
+
+                if (btnFichas) {
+                    btnFichas.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300';
+                }
+                if (btnStudents) {
+                    btnStudents.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-blue-600 text-white shadow-sm';
+                }
+                renderAdminStudentsView();
+            } else {
+                if (fichasContainer) fichasContainer.classList.remove('hidden');
+                if (studentsContainer) studentsContainer.classList.add('hidden');
+
+                if (btnFichas) {
+                    btnFichas.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-blue-600 text-white shadow-sm';
+                }
+                if (btnStudents) {
+                    btnStudents.className = 'px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300';
+                }
+                renderAdminProjectsView();
+            }
+            updateAdminCountsBadges();
+        }
+
+        function renderAdminStudentsView() {
+            const tbody = document.getElementById('admin-students-table-body');
+            if (!tbody) return;
+
+            const searchInput = document.getElementById('admin-students-search-input');
+            const q = (searchInput?.value || '').trim().toLowerCase();
+
+            let allStudents = [];
+            projectsList.forEach((p, pIdx) => {
+                const team = (p.teamName || `Equipo ${pIdx + 1}`).trim();
+                const projTitle = (p.projectTitle || 'Sin título aún').trim();
+                const solution = getFormattedSolutionType(p);
+                const model = getFormattedModel(p);
+                const members = (p.members || []).map(m => (m || '').trim()).filter(Boolean);
+
+                members.forEach(member => {
+                    allStudents.push({
+                        student: member,
+                        team,
+                        projectTitle: projTitle,
+                        solution,
+                        model,
+                        projectId: p.id
+                    });
+                });
+            });
+
+            // Ordenar alfabéticamente por estudiante
+            allStudents.sort((a, b) => a.student.localeCompare(b.student));
+
+            const filtered = q ? allStudents.filter(item => {
+                const text = `${item.student} ${item.team} ${item.projectTitle} ${item.solution} ${item.model}`.toLowerCase();
+                return text.includes(q);
+            }) : allStudents;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No se encontraron estudiantes registrados${q ? ' con la búsqueda actual' : ''}.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((item, idx) => `
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                    <td class="py-2.5 px-3 font-mono text-slate-400 text-[10px]">${idx + 1}</td>
+                    <td class="py-2.5 px-3 font-bold text-slate-800 dark:text-slate-100 truncate" title="${escapeHtml(item.student)}">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
+                            <span class="truncate">${escapeHtml(item.student)}</span>
+                        </div>
+                    </td>
+                    <td class="py-2.5 px-3 text-blue-600 dark:text-blue-400 font-semibold truncate" title="${escapeHtml(item.team)}">${escapeHtml(item.team)}</td>
+                    <td class="py-2.5 px-3 text-slate-700 dark:text-slate-300 truncate" title="${escapeHtml(item.projectTitle)}">${escapeHtml(item.projectTitle)}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="inline-block px-2 py-0.5 rounded bg-teal-500/10 text-teal-700 dark:text-teal-300 font-semibold text-[10px] truncate max-w-[140px]" title="${escapeHtml(item.solution)}">${escapeHtml(item.solution)}</span>
+                    </td>
+                    <td class="py-2.5 px-3 font-semibold text-slate-600 dark:text-slate-300 truncate text-[10px]" title="${escapeHtml(item.model)}">${escapeHtml(item.model)}</td>
+                    <td class="py-2.5 px-3 text-right">
+                        <button type="button" onclick="openDetailModal('${item.projectId}')" class="px-2 py-1 rounded bg-blue-600/10 hover:bg-blue-600 text-blue-600 hover:text-white text-xs font-bold transition cursor-pointer" title="Ver Ficha">Ver</button>
+                    </td>
+                </tr>
+            `).join('');
+            updateAdminCountsBadges();
+        }
+
         function renderAdminProjectsView() {
             const filtered = getFilteredAdminProjects();
             const tbody = document.getElementById('admin-projects-table-body');
             const cardsGrid = document.getElementById('admin-projects-cards-grid');
+
+            updateAdminCountsBadges();
 
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-500">No se encontraron fichas con los criterios seleccionados.</td></tr>`;
@@ -2431,20 +2595,38 @@
 
             tbody.innerHTML = filtered.map((p, idx) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
-                    <td class="py-3 px-3.5 font-bold">
-                        <div class="text-[10px] text-blue-600 dark:text-blue-400 uppercase font-extrabold">${escapeHtml(p.teamName || `Equipo ${idx + 1}`)}</div>
-                        <div>${escapeHtml(p.projectTitle || 'Sin título')}</div>
+                    <td class="py-2.5 px-2 align-top">
+                        <div class="text-[10px] text-blue-600 dark:text-blue-400 uppercase font-extrabold truncate">${escapeHtml(p.teamName || `Equipo ${idx + 1}`)}</div>
+                        <div class="font-bold line-clamp-2 leading-tight text-slate-800 dark:text-slate-100" title="${escapeHtml(p.projectTitle || 'Sin título')}">${escapeHtml(p.projectTitle || 'Sin título')}</div>
                     </td>
-                    <td class="py-3 px-3.5 max-w-[160px] truncate" title="${escapeHtml(getFormattedMembers(p))}">${escapeHtml(getFormattedMembers(p))}</td>
-                    <td class="py-3 px-3.5 max-w-[180px] truncate" title="${escapeHtml(p.problem || '')}">${escapeHtml(p.problem || '—')}</td>
-                    <td class="py-3 px-3.5 max-w-[130px] truncate" title="${escapeHtml(p.target || '')}">${escapeHtml(p.target || '—')}</td>
-                    <td class="py-3 px-3.5 max-w-[180px] truncate" title="${escapeHtml(p.objective || '')}">${escapeHtml(p.objective || '—')}</td>
-                    <td class="py-3 px-3.5"><span class="px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-700 dark:text-teal-300 font-semibold">${escapeHtml(getFormattedSolutionType(p))}</span></td>
-                    <td class="py-3 px-3.5 font-semibold">${escapeHtml(getFormattedModel(p))}</td>
-                    <td class="py-3 px-3.5 text-right whitespace-nowrap space-x-1.5">
-                        <button type="button" onclick="openDetailModal('${p.id}')" class="px-2.5 py-1 rounded-lg bg-blue-600/10 hover:bg-blue-600 text-blue-600 hover:text-white text-xs font-bold transition cursor-pointer">Ver</button>
-                        <button type="button" onclick="editProjectFromAdmin('${p.id}')" class="px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-xs font-bold transition cursor-pointer">Editar</button>
-                        <button type="button" onclick="confirmDeleteProject('${p.id}')" class="px-2.5 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white text-xs font-bold transition cursor-pointer" title="Borrar este proyecto permanentemente">Borrar</button>
+                    <td class="py-2.5 px-2 align-top">
+                        <div class="line-clamp-2 leading-tight text-slate-600 dark:text-slate-300" title="${escapeHtml(getFormattedMembers(p))}">${escapeHtml(getFormattedMembers(p))}</div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                        <div class="line-clamp-2 leading-tight text-slate-600 dark:text-slate-300" title="${escapeHtml(p.problem || '')}">${escapeHtml(p.problem || '—')}</div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                        <div class="line-clamp-2 leading-tight text-slate-600 dark:text-slate-300" title="${escapeHtml(p.target || '')}">${escapeHtml(p.target || '—')}</div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                        <div class="line-clamp-2 leading-tight text-slate-600 dark:text-slate-300" title="${escapeHtml(p.objective || '')}">${escapeHtml(p.objective || '—')}</div>
+                    </td>
+                    <td class="py-2.5 px-2 align-top">
+                        <span class="inline-block px-1.5 py-0.5 rounded bg-teal-500/10 text-teal-700 dark:text-teal-300 font-semibold leading-tight text-[10px] break-words">${escapeHtml(getFormattedSolutionType(p))}</span>
+                    </td>
+                    <td class="py-2.5 px-2 align-top font-semibold truncate text-[11px]">${escapeHtml(getFormattedModel(p))}</td>
+                    <td class="py-2.5 px-1.5 align-top text-right whitespace-nowrap">
+                        <div class="flex items-center justify-end gap-1">
+                            <button type="button" onclick="openDetailModal('${p.id}')" class="p-1 rounded bg-blue-600/10 hover:bg-blue-600 text-blue-600 hover:text-white transition cursor-pointer" title="Ver detalle">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                            <button type="button" onclick="editProjectFromAdmin('${p.id}')" class="p-1 rounded bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-slate-700 dark:text-slate-200 transition cursor-pointer" title="Editar">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button type="button" onclick="confirmDeleteProject('${p.id}')" class="p-1 rounded bg-rose-500/10 hover:bg-rose-600 text-rose-600 hover:text-white transition cursor-pointer" title="Borrar proyecto">
+                                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -2554,12 +2736,13 @@
             renderProjectSwitcherUI();
             renderAdminDashboard();
             renderAdminProjectsView();
+            renderAdminStudentsView();
             closeDetailModal();
             showToast('Proyecto eliminado correctamente.', 'info');
         }
 
         // ---------------------------------------------------------------------
-        // 8. EXPORTACIÓN OFICIAL A EXCEL (.XLSX) CON LAS 7 COLUMNAS SOLICITADAS
+        // 8. EXPORTACIÓN OFICIAL A EXCEL (.XLSX) CON 2 HOJAS (FICHAS Y ESTUDIANTES)
         // ---------------------------------------------------------------------
         function exportAllProjectsToExcel() {
             if (typeof XLSX === 'undefined') {
@@ -2570,62 +2753,104 @@
             const exportableProjects = projectsList.filter(p => p.isRegistered || hasMinimumProjectData(p));
             const listToExport = exportableProjects.length > 0 ? exportableProjects : projectsList;
 
-            // Hoja 1: Exactamente las 7 columnas solicitadas por el usuario
-            const sheet1Rows = listToExport.map(p => ({
-                'Nombre de Proyecto': (p.projectTitle || '').trim() || 'Sin especificar',
-                'Integrantes':        getFormattedMembers(p),
-                'Problema/Necesidad': (p.problem || '').trim() || 'Sin especificar',
-                'Target':             (p.target || '').trim() || 'Sin especificar',
-                'Objetivo':           (p.objective || '').trim() || 'Sin especificar',
-                'Tipo de Solución':   getFormattedSolutionType(p),
-                'Modelo Utilizado':   getFormattedModel(p)
-            }));
-
-            // Hoja 2: Matriz Completa incluyendo Equipo, Estructura Técnica y Marco Ético-Normativo
-            const sheet2Rows = listToExport.map((p, idx) => ({
+            // Hoja 1: Fichas de Proyecto completas con todos los datos
+            const sheet1Rows = listToExport.map((p, idx) => ({
                 'N°':                           idx + 1,
                 'Equipo':                       (p.teamName || `Equipo ${idx + 1}`).trim(),
-                'Nombre de Proyecto':           (p.projectTitle || '').trim() || 'Sin especificar',
+                'Título del Proyecto':          (p.projectTitle || '').trim() || 'Sin especificar',
                 'Integrantes':                  getFormattedMembers(p),
-                'Problema/Necesidad':           (p.problem || '').trim() || 'Sin especificar',
-                'Target':                       (p.target || '').trim() || 'Sin especificar',
-                'Objetivo':                     (p.objective || '').trim() || 'Sin especificar',
+                'Problema / Necesidad':         (p.problem || '').trim() || 'Sin especificar',
+                'Público Objetivo (Target)':    (p.target || '').trim() || 'Sin especificar',
+                'Objetivo del Proyecto':        (p.objective || '').trim() || 'Sin especificar',
                 'Tipo de Solución':             getFormattedSolutionType(p),
-                'Modelo Utilizado':             getFormattedModel(p),
-                'Estructura Técnica / Lenguaje': getFormattedTechStructures(p),
+                'Modelo IA Utilizado':          getFormattedModel(p),
+                'Estructura Técnica / Lenguajes': getFormattedTechStructures(p),
                 'Aspectos Éticos':              (p.ethicalAspects || '').trim() || 'Sin especificar',
                 'Aspectos Legales':             (p.legalAspects || '').trim() || 'Sin especificar',
                 'Análisis Ético-Legal':         (p.ethicalLegalAnalysis || '').trim() || 'Sin especificar',
-                'Avance (%)':                   `${calculateProjectCompletion(p)}%`,
+                'Estado de Registro':           p.isRegistered ? 'Registrado Oficial' : 'Borrador',
+                'Completitud (%)':              `${calculateProjectCompletion(p)}%`,
                 'Última Actualización':         p.updatedAt ? new Date(p.updatedAt).toLocaleString('es-CL') : ''
             }));
+
+            // Hoja 2: Listado de los estudiantes integrantes de cada proyecto
+            const sheet2Rows = [];
+            let studentCounter = 1;
+            listToExport.forEach((p, pIdx) => {
+                const team = (p.teamName || `Equipo ${pIdx + 1}`).trim();
+                const title = (p.projectTitle || '').trim() || 'Sin especificar';
+                const solution = getFormattedSolutionType(p);
+                const model = getFormattedModel(p);
+                const regStatus = p.isRegistered ? 'Registrado Oficial' : 'Borrador';
+                const members = (p.members || []).map(m => (m || '').trim()).filter(Boolean);
+
+                if (members.length > 0) {
+                    members.forEach(student => {
+                        sheet2Rows.push({
+                            'N°': studentCounter++,
+                            'Nombre del Estudiante': student,
+                            'Equipo': team,
+                            'Título del Proyecto': title,
+                            'Tipo de Solución': solution,
+                            'Modelo IA Utilizado': model,
+                            'Estado': regStatus,
+                            'Fecha de Registro': p.registeredAt ? new Date(p.registeredAt).toLocaleDateString('es-CL') : (p.createdAt ? new Date(p.createdAt).toLocaleDateString('es-CL') : '')
+                        });
+                    });
+                } else {
+                    sheet2Rows.push({
+                        'N°': studentCounter++,
+                        'Nombre del Estudiante': '(Sin integrantes ingresados)',
+                        'Equipo': team,
+                        'Título del Proyecto': title,
+                        'Tipo de Solución': solution,
+                        'Modelo IA Utilizado': model,
+                        'Estado': regStatus,
+                        'Fecha de Registro': ''
+                    });
+                }
+            });
 
             const wb = XLSX.utils.book_new();
 
             const ws1 = XLSX.utils.json_to_sheet(sheet1Rows);
             ws1['!cols'] = [
-                { wch: 30 }, // Nombre de Proyecto
+                { wch: 6 },  // N°
+                { wch: 20 }, // Equipo
+                { wch: 32 }, // Título del Proyecto
                 { wch: 35 }, // Integrantes
-                { wch: 45 }, // Problema/Necesidad
-                { wch: 25 }, // Target
-                { wch: 45 }, // Objetivo
-                { wch: 32 }, // Tipo de Solución
-                { wch: 28 }  // Modelo Utilizado
+                { wch: 42 }, // Problema / Necesidad
+                { wch: 24 }, // Target
+                { wch: 42 }, // Objetivo
+                { wch: 30 }, // Tipo de Solución
+                { wch: 24 }, // Modelo IA
+                { wch: 28 }, // Estructura Técnica
+                { wch: 40 }, // Aspectos Éticos
+                { wch: 40 }, // Aspectos Legales
+                { wch: 45 }, // Análisis Ético-Legal
+                { wch: 18 }, // Estado
+                { wch: 14 }, // Completitud
+                { wch: 22 }  // Última Actualización
             ];
             XLSX.utils.book_append_sheet(wb, ws1, 'Fichas de Proyecto');
 
             const ws2 = XLSX.utils.json_to_sheet(sheet2Rows);
             ws2['!cols'] = [
-                { wch: 6 }, { wch: 18 }, { wch: 30 }, { wch: 35 }, { wch: 42 },
-                { wch: 24 }, { wch: 42 }, { wch: 30 }, { wch: 26 }, { wch: 28 },
-                { wch: 40 }, { wch: 40 }, { wch: 45 }, { wch: 12 }, { wch: 22 }
+                { wch: 6 },  // N°
+                { wch: 32 }, // Nombre del Estudiante
+                { wch: 20 }, // Equipo
+                { wch: 35 }, // Título del Proyecto
+                { wch: 28 }, // Tipo de Solución
+                { wch: 22 }, // Modelo IA Utilizado
+                { wch: 18 }, // Estado
+                { wch: 16 }  // Fecha de Registro
             ];
-            XLSX.utils.book_append_sheet(wb, ws2, 'Detalle Completo y Etica');
+            XLSX.utils.book_append_sheet(wb, ws2, 'Nómina de Estudiantes');
 
             const dateStr = new Date().toISOString().slice(0, 10);
-            XLSX.writeFile(wb, `Fichas_Proyectos_IA_Aplicada_${dateStr}.xlsx`);
+            XLSX.writeFile(wb, `Fichas_y_Estudiantes_IA_Aplicada_${dateStr}.xlsx`);
             playTone(720, 0.14);
-            showToast('Archivo Excel (.xlsx) descargado correctamente.', 'success');
+            showToast('Archivo Excel descargado con 2 hojas: Fichas y Nómina de Estudiantes.', 'success');
         }
 
         // Exportación / Importación JSON para respaldo y acumulación manual si se requiere
