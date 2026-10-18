@@ -582,6 +582,188 @@
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
 
+        /* ========================================================================= */
+        /* WIDGET TEMPORIZADOR DE 30 MINUTOS (DEBAJO DEL MENÚ)                        */
+        /* ========================================================================= */
+        @keyframes flashRedScreenTriple {
+            0% { opacity: 0; }
+            15% { opacity: 0.75; }
+            30% { opacity: 0.05; }
+            45% { opacity: 0.75; }
+            60% { opacity: 0.05; }
+            75% { opacity: 0.75; }
+            100% { opacity: 0; }
+        }
+        .screen-flash-red-active {
+            position: fixed;
+            inset: 0;
+            background-color: #ef4444;
+            pointer-events: none;
+            z-index: 999999;
+            animation: flashRedScreenTriple 2.6s ease-in-out forwards;
+        }
+
+        .timer-bar-card {
+            position: relative;
+            background: linear-gradient(135deg, #09132c 0%, #0e1e4a 60%, #0f355c 100%);
+            color: #ffffff;
+            border-radius: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 10px 25px -5px rgba(9, 19, 44, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+            padding: 0.85rem 1.35rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        [data-theme="dark"] .timer-bar-card {
+            background: linear-gradient(135deg, #050b1a 0%, #0b1536 60%, #0d2847 100%);
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="high-contrast"] .timer-bar-card {
+            background: #000000;
+            border: 2px solid #ffff00;
+            box-shadow: none;
+            color: #ffff00;
+        }
+
+        .timer-info-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .timer-header-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .timer-title {
+            font-size: 0.8125rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #e2e8f0;
+        }
+
+        [data-theme="high-contrast"] .timer-title {
+            color: #ffff00;
+        }
+
+        .timer-badge {
+            font-size: 0.6875rem;
+            font-weight: 800;
+            padding: 0.15rem 0.5rem;
+            border-radius: 9999px;
+            background: rgba(245, 158, 11, 0.2);
+            color: #fcd34d;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            letter-spacing: 0.05em;
+        }
+
+        .btn-timer-edit {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.25rem;
+            border-radius: 0.375rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.08);
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-timer-edit:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+
+        .timer-status-msg {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .timer-digits-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.35rem;
+            flex: 1;
+            max-width: 280px;
+        }
+
+        .timer-digits {
+            font-family: monospace, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas;
+            font-size: 2.25rem;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            line-height: 1;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        [data-theme="high-contrast"] .timer-digits {
+            color: #ffff00;
+            text-shadow: none;
+        }
+
+        .timer-progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .timer-progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
+            transition: width 0.3s ease, background 0.3s ease;
+            border-radius: 9999px;
+        }
+
+        .timer-action-col {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-timer-start {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.55rem 1.15rem;
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.8125rem;
+            border-radius: 0.5rem;
+            border: none;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-timer-start:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+            transform: translateY(-1px);
+        }
+        .btn-timer-start:active {
+            transform: scale(0.97);
+        }
+
+        [data-theme="high-contrast"] .btn-timer-start {
+            background: #ffff00;
+            color: #000000;
+            border: 2px solid #ffffff;
+            box-shadow: none;
+        }
+
         @media (max-width: 768px) {
             .floating-acc-wrapper {
                 top: auto;
@@ -803,6 +985,37 @@
                     <span id="save-text">Borrador auto-guardado</span>
                 </div>
             </nav>
+        </div>
+
+        <!-- CONTADOR DE 30 MINUTOS (DEBAJO DEL MENÚ) -->
+        <div id="activity-timer-wrapper" class="app-container max-w-[1040px] mx-auto px-4 sm:px-6 lg:px-8 mb-4 w-full">
+            <div class="timer-bar-card" role="region" aria-label="Control de tiempo de actividad">
+                <div class="timer-info-col">
+                    <div class="timer-header-meta">
+                        <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="timer-title">Tiempo de Actividad</span>
+                        <span id="timer-badge" class="timer-badge">30 MIN</span>
+                        <button type="button" onclick="openTimerEditModal()" title="Editar duración (requiere contraseña)" class="btn-timer-edit" aria-label="Editar tiempo">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </button>
+                    </div>
+                    <div id="timer-status-msg" class="timer-status-msg">Listo para iniciar</div>
+                </div>
+
+                <div class="timer-digits-col">
+                    <div id="timer-display" class="timer-digits">30:00</div>
+                    <div class="timer-progress-track">
+                        <div id="timer-progress-bar" class="timer-progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="timer-action-col">
+                    <button type="button" id="btn-timer-start" onclick="startTimer()" class="btn-timer-start">
+                        <svg id="timer-icon-play" class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span id="timer-btn-label">Iniciar</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- BARRA DE EDICIÓN ADMIN: SELECTOR DE PROYECTO ACTIVO Y PASOS DE LA FICHA (VISIBLE SOLO AL EDITAR FICHA EN MODO ADMIN) -->
@@ -1466,6 +1679,54 @@
             <div class="flex justify-end gap-2">
                 <button type="button" onclick="closeResetModal()" class="px-3.5 py-2 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-700 cursor-pointer">Cancelar</button>
                 <button type="button" onclick="submitResetPlatform()" class="px-4 py-2 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-700 text-white shadow-sm cursor-pointer">Borrar Todos los Datos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         MODAL DE EDICIÓN DEL TEMPORIZADOR DE 30 MINUTOS (PROTEGIDO POR CONTRASEÑA)
+         ========================================================================= -->
+    <div id="timer-edit-modal-backdrop" class="modal-overlay" style="display: none;" onclick="handleTimerModalBackdropClick(event)">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-timer-title">
+            <div class="flex items-center gap-3 mb-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <h3 class="text-base font-display font-bold" id="modal-timer-title">Configurar Tiempo de Actividad</h3>
+            </div>
+
+            <p class="text-xs text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
+                Ingresa la contraseña de administrador para modificar la duración del contador hacia atrás.
+            </p>
+
+            <div class="space-y-3.5 mb-5">
+                <div id="timer-pass-wrapper">
+                    <label for="timer-pass-input" class="block text-xs font-bold mb-1">Contraseña de Administrador:</label>
+                    <input type="password" id="timer-pass-input" onkeydown="handleTimerInputKey(event)" placeholder="Ingresa la contraseña..." class="app-input" autocomplete="off">
+                    <p id="timer-pass-error-msg" class="text-xs text-rose-500 font-semibold mt-1 hidden">Contraseña incorrecta. Inténtalo de nuevo.</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div>
+                        <label for="timer-edit-minutes" class="block text-xs font-bold mb-1">Minutos (0 a 180):</label>
+                        <input type="number" id="timer-edit-minutes" min="0" max="180" value="30" onkeydown="handleTimerInputKey(event)" class="app-input text-center font-bold">
+                    </div>
+                    <div>
+                        <label for="timer-edit-seconds" class="block text-xs font-bold mb-1">Segundos (0 a 59):</label>
+                        <input type="number" id="timer-edit-seconds" min="0" max="59" value="0" onkeydown="handleTimerInputKey(event)" class="app-input text-center font-bold">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2.5">
+                <button type="button" class="px-3.5 py-2 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer" onclick="closeTimerEditModal()">Cancelar</button>
+                <button type="button" class="px-4 py-2 text-xs font-bold rounded-lg bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center gap-1.5 transition-colors cursor-pointer" onclick="submitTimerEdit()">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+                    <span>Guardar Tiempo</span>
+                </button>
             </div>
         </div>
     </div>
@@ -3455,6 +3716,285 @@
                 .replace(/'/g, '&#039;');
         }
 
+        // ---------------------------------------------------------------------
+        // 11. TEMPORIZADOR DE 30 MINUTOS (IDÉNTICO A PLATAFORMAS CURSO 2)
+        // ---------------------------------------------------------------------
+        const TIMER_DEFAULT_SECONDS = 30 * 60;
+        let timerState = {
+            initialSeconds: TIMER_DEFAULT_SECONDS,
+            remaining: TIMER_DEFAULT_SECONDS,
+            isRunning: false,
+            intervalId: null
+        };
+
+        function formatTimerDigits(totalSec) {
+            const mins = Math.floor(totalSec / 60);
+            const secs = totalSec % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function updateTimerUI() {
+            const display = document.getElementById('timer-display');
+            const statusMsg = document.getElementById('timer-status-msg');
+            const btnLabel = document.getElementById('timer-btn-label');
+            const btnStart = document.getElementById('btn-timer-start');
+            const iconPlay = document.getElementById('timer-icon-play');
+            const progressBar = document.getElementById('timer-progress-bar');
+            const badge = document.getElementById('timer-badge');
+
+            if (!display) return;
+
+            display.textContent = formatTimerDigits(timerState.remaining);
+
+            const total = timerState.initialSeconds || TIMER_DEFAULT_SECONDS;
+            const percent = total > 0 ? (timerState.remaining / total) * 100 : 0;
+            if (progressBar) {
+                progressBar.style.width = `${percent}%`;
+                if (percent < 15) {
+                    progressBar.style.background = '#ef4444';
+                    display.style.color = '#ef4444';
+                } else if (percent < 40) {
+                    progressBar.style.background = '#f59e0b';
+                    display.style.color = '#fcd34d';
+                } else {
+                    progressBar.style.background = 'linear-gradient(90deg, #f59e0b 0%, #10b981 100%)';
+                    display.style.color = '#ffffff';
+                }
+            }
+
+            if (timerState.remaining <= 0) {
+                if (statusMsg) {
+                    statusMsg.textContent = '¡Plazo finalizado!';
+                    statusMsg.className = 'text-[11px] font-bold text-rose-400 mt-0.5';
+                }
+                if (badge) {
+                    badge.textContent = '00:00';
+                    badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse';
+                }
+                if (btnStart) {
+                    btnStart.disabled = true;
+                    btnStart.className = 'px-3.5 py-2 bg-slate-800 text-slate-500 font-bold text-xs rounded-xl border border-white/10 opacity-60 cursor-not-allowed flex items-center gap-1.5';
+                    if (btnLabel) btnLabel.textContent = 'Finalizado';
+                    if (iconPlay) iconPlay.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+                }
+                return;
+            }
+
+            if (timerState.isRunning) {
+                if (statusMsg) {
+                    statusMsg.textContent = '';
+                    statusMsg.className = 'text-[11px] font-medium text-emerald-400 mt-0.5';
+                }
+                if (btnStart) {
+                    btnStart.disabled = true;
+                    btnStart.className = 'px-3.5 py-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold text-xs rounded-xl cursor-default flex items-center gap-1.5';
+                    if (btnLabel) btnLabel.textContent = 'En curso';
+                    if (iconPlay) {
+                        iconPlay.innerHTML = '<circle cx="12" cy="12" r="6" fill="currentColor" class="animate-pulse"></circle>';
+                    }
+                }
+            } else {
+                if (statusMsg) {
+                    statusMsg.textContent = 'Listo para iniciar';
+                    statusMsg.className = 'text-[11px] font-medium text-slate-400 mt-0.5';
+                }
+                if (btnStart) {
+                    btnStart.disabled = false;
+                    btnStart.className = 'btn-timer-start';
+                    if (btnLabel) btnLabel.textContent = 'Iniciar';
+                    if (iconPlay) {
+                        iconPlay.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"></polygon>';
+                    }
+                }
+            }
+        }
+
+        function startTimer() {
+            if (timerState.isRunning || timerState.remaining <= 0) return;
+            playTone(540, 0.08);
+            timerState.isRunning = true;
+            if (timerState.intervalId) clearInterval(timerState.intervalId);
+
+            timerState.intervalId = setInterval(() => {
+                if (timerState.remaining > 0) {
+                    timerState.remaining--;
+                    updateTimerUI();
+                    if (timerState.remaining === 0) {
+                        finishTimer();
+                    }
+                }
+            }, 1000);
+
+            updateTimerUI();
+            showToast(`Temporizador iniciado (${formatTimerDigits(timerState.initialSeconds)}). ¡Éxito en la actividad!`, 'info');
+        }
+
+        function openTimerEditModal() {
+            playTone(520, 0.07);
+            const modal = document.getElementById('timer-edit-modal-backdrop');
+            const passInput = document.getElementById('timer-pass-input');
+            const passWrapper = document.getElementById('timer-pass-wrapper');
+            const minsInput = document.getElementById('timer-edit-minutes');
+            const secsInput = document.getElementById('timer-edit-seconds');
+            const errMsg = document.getElementById('timer-pass-error-msg');
+
+            if (modal) modal.style.display = 'flex';
+            if (passWrapper) {
+                if (currentSession && currentSession.role === 'admin') {
+                    passWrapper.classList.add('hidden');
+                } else {
+                    passWrapper.classList.remove('hidden');
+                }
+            }
+            if (passInput) {
+                passInput.value = '';
+                passInput.classList.remove('border-rose-500', 'ring-1', 'ring-rose-500');
+                if (!currentSession || currentSession.role !== 'admin') {
+                    setTimeout(() => passInput.focus(), 50);
+                }
+            }
+            if (minsInput) minsInput.value = Math.floor(timerState.initialSeconds / 60);
+            if (secsInput) secsInput.value = timerState.initialSeconds % 60;
+            if (errMsg) errMsg.classList.add('hidden');
+        }
+
+        function closeTimerEditModal() {
+            playTone(480, 0.06);
+            const modal = document.getElementById('timer-edit-modal-backdrop');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function handleTimerModalBackdropClick(e) {
+            if (e.target.id === 'timer-edit-modal-backdrop') {
+                closeTimerEditModal();
+            }
+        }
+
+        function handleTimerInputKey(e) {
+            if (e.key === 'Enter') {
+                submitTimerEdit();
+            } else if (e.key === 'Escape') {
+                closeTimerEditModal();
+            }
+        }
+
+        function submitTimerEdit() {
+            const passInput = document.getElementById('timer-pass-input');
+            const minsInput = document.getElementById('timer-edit-minutes');
+            const secsInput = document.getElementById('timer-edit-seconds');
+            const errMsg = document.getElementById('timer-pass-error-msg');
+
+            const isAdminSession = Boolean(currentSession && currentSession.role === 'admin');
+            const entered = passInput ? passInput.value.trim().toLowerCase() : '';
+
+            // Contraseña requerida: "hipopotamo" (o "hipopótamo") salvo que ya esté en sesión admon
+            if (!isAdminSession && entered !== 'hipopotamo' && entered !== 'hipopótamo') {
+                if (errMsg) errMsg.classList.remove('hidden');
+                if (passInput) {
+                    passInput.classList.add('border-rose-500', 'ring-1', 'ring-rose-500');
+                    passInput.focus();
+                }
+                playTone(240, 0.16);
+                return;
+            }
+
+            const mins = Math.max(0, parseInt(minsInput ? minsInput.value : '0', 10) || 0);
+            const secs = Math.max(0, Math.min(59, parseInt(secsInput ? secsInput.value : '0', 10) || 0));
+            const totalSec = mins * 60 + secs;
+
+            if (totalSec <= 0) {
+                showToast('El tiempo debe ser mayor a 0 segundos.', 'warning');
+                return;
+            }
+
+            if (timerState.intervalId) {
+                clearInterval(timerState.intervalId);
+                timerState.intervalId = null;
+            }
+
+            timerState.initialSeconds = totalSec;
+            timerState.remaining = totalSec;
+            timerState.isRunning = false;
+
+            const badge = document.getElementById('timer-badge');
+            if (badge) {
+                badge.textContent = secs === 0 ? `${mins} MIN` : `${mins}m ${secs}s`;
+                badge.className = 'timer-badge';
+            }
+
+            updateTimerUI();
+            closeTimerEditModal();
+            playTone(720, 0.12);
+            showToast(`Duración del temporizador configurada a ${formatTimerDigits(totalSec)}.`, 'success');
+        }
+
+        function finishTimer() {
+            if (timerState.intervalId) {
+                clearInterval(timerState.intervalId);
+                timerState.intervalId = null;
+            }
+            timerState.isRunning = false;
+            updateTimerUI();
+
+            // 1. Destello rojo en pantalla 3 veces
+            triggerScreenFlashRed();
+
+            // 2. Alerta auditiva armónica indicando término del plazo
+            playTimerAlarmSound();
+
+            // 3. Notificación visible
+            showToast('¡Atención! Se ha cumplido el tiempo asignado para la actividad.', 'warning');
+        }
+
+        function triggerScreenFlashRed() {
+            let overlay = document.getElementById('timer-screen-flash-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'timer-screen-flash-overlay';
+                document.body.appendChild(overlay);
+            }
+            overlay.className = 'screen-flash-red-active';
+            setTimeout(() => {
+                if (overlay) overlay.className = '';
+            }, 2700);
+        }
+
+        function playTimerAlarmSound() {
+            if (!appPrefs.sound) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const emitBeep = (freq, startTime, duration) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+                    gain.gain.setValueAtTime(0.09, ctx.currentTime + startTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + startTime + duration);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(ctx.currentTime + startTime);
+                    osc.stop(ctx.currentTime + startTime + duration);
+                };
+
+                // Triple pulso de alerta sonora
+                emitBeep(523.25, 0.0, 0.2); // C5
+                emitBeep(659.25, 0.15, 0.2); // E5
+                emitBeep(783.99, 0.3, 0.35); // G5
+
+                setTimeout(() => {
+                    emitBeep(523.25, 0.0, 0.2);
+                    emitBeep(659.25, 0.15, 0.2);
+                    emitBeep(783.99, 0.3, 0.35);
+                }, 800);
+
+                setTimeout(() => {
+                    emitBeep(523.25, 0.0, 0.2);
+                    emitBeep(659.25, 0.15, 0.2);
+                    emitBeep(1046.50, 0.3, 0.6); // C6
+                }, 1600);
+            } catch (e) {}
+        }
+
         // Inicialización al cargar DOM
         document.addEventListener('DOMContentLoaded', () => {
             try {
@@ -3477,6 +4017,7 @@
             } catch (e) {}
 
             applySessionUI();
+            updateTimerUI();
             syncWithServerNow(false);
         });
     </script>
