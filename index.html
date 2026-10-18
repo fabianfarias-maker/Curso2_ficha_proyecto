@@ -1189,13 +1189,13 @@
 
                     <!-- SUB-VISTA 1: FICHAS DE PROYECTOS -->
                     <div id="admin-subview-fichas-container">
-                        <!-- Filtros y Buscador Admin -->
-                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 mb-4">
-                            <div class="sm:col-span-6">
-                                <input type="text" id="admin-search-input" oninput="renderAdminProjectsView()" class="app-input" placeholder="Buscar por nombre de proyecto, integrante, problema o target...">
+                        <!-- Filtros, Buscador y Ordenamiento Admin -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 mb-3">
+                            <div class="sm:col-span-4">
+                                <input type="text" id="admin-search-input" oninput="renderAdminProjectsView()" class="app-input text-xs" placeholder="Buscar por proyecto, equipo, integrante, problema o target...">
                             </div>
                             <div class="sm:col-span-3">
-                                <select id="admin-filter-solution" onchange="renderAdminProjectsView()" class="app-input">
+                                <select id="admin-filter-solution" onchange="renderAdminProjectsView()" class="app-input text-xs">
                                     <option value="">Todos los Tipos de Solución</option>
                                     <option value="Artefacto Interactivo">Artefacto Interactivo</option>
                                     <option value="Plataforma web / Aplicación">Plataforma web / Aplicación</option>
@@ -1204,8 +1204,8 @@
                                     <option value="Otro">Otro</option>
                                 </select>
                             </div>
-                            <div class="sm:col-span-3">
-                                <select id="admin-filter-model" onchange="renderAdminProjectsView()" class="app-input">
+                            <div class="sm:col-span-2">
+                                <select id="admin-filter-model" onchange="renderAdminProjectsView()" class="app-input text-xs">
                                     <option value="">Todos los Modelos IA</option>
                                     <option value="ChatGPT">ChatGPT</option>
                                     <option value="Gemini">Gemini</option>
@@ -1215,19 +1215,39 @@
                                     <option value="Otro">Otro</option>
                                 </select>
                             </div>
+                            <div class="sm:col-span-3">
+                                <select id="admin-projects-sort-select" onchange="handleProjectSortSelectChange(this.value)" class="app-input text-xs font-semibold">
+                                    <option value="teamName:asc">Ordenar: Equipo (A-Z)</option>
+                                    <option value="teamName:desc">Ordenar: Equipo (Z-A)</option>
+                                    <option value="projectTitle:asc">Ordenar: Proyecto (A-Z)</option>
+                                    <option value="projectTitle:desc">Ordenar: Proyecto (Z-A)</option>
+                                    <option value="solution:asc">Ordenar: Solución (A-Z)</option>
+                                    <option value="model:asc">Ordenar: Modelo IA (A-Z)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Tabla Resumen en Una Sola Visualización (Sin Scroll Horizontal) -->
                         <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 mb-6 w-full">
                             <table class="w-full text-left border-collapse text-[11px] table-fixed" style="table-layout: fixed; width: 100%;">
                                 <thead>
-                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700">
-                                        <th class="py-2.5 px-2 font-extrabold" style="width: 19%;">PROYECTO</th>
-                                        <th class="py-2.5 px-2 font-extrabold" style="width: 17%;">INTEGRANTES</th>
+                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700 select-none">
+                                        <th onclick="toggleProjectTableSort('projectTitle')" class="py-2.5 px-2 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 19%;" title="Haz clic para ordenar por Proyecto">
+                                            <div class="flex items-center gap-1"><span>PROYECTO</span><span id="proj-sort-icon-projectTitle" class="text-slate-400">↕</span></div>
+                                        </th>
+                                        <th onclick="toggleProjectTableSort('members')" class="py-2.5 px-2 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 17%;" title="Haz clic para ordenar por Integrantes">
+                                            <div class="flex items-center gap-1"><span>INTEGRANTES</span><span id="proj-sort-icon-members" class="text-slate-400">↕</span></div>
+                                        </th>
                                         <th class="py-2.5 px-2 font-extrabold" style="width: 22%;">PROBLEMA / NECESIDAD</th>
-                                        <th class="py-2.5 px-2 font-extrabold" style="width: 11%;">TARGET</th>
-                                        <th class="py-2.5 px-2 font-extrabold" style="width: 12%;">SOLUCIÓN</th>
-                                        <th class="py-2.5 px-2 font-extrabold" style="width: 7%;">MODELO</th>
+                                        <th onclick="toggleProjectTableSort('target')" class="py-2.5 px-2 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 11%;" title="Haz clic para ordenar por Target">
+                                            <div class="flex items-center gap-1"><span>TARGET</span><span id="proj-sort-icon-target" class="text-slate-400">↕</span></div>
+                                        </th>
+                                        <th onclick="toggleProjectTableSort('solution')" class="py-2.5 px-2 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 12%;" title="Haz clic para ordenar por Solución">
+                                            <div class="flex items-center gap-1"><span>SOLUCIÓN</span><span id="proj-sort-icon-solution" class="text-slate-400">↕</span></div>
+                                        </th>
+                                        <th onclick="toggleProjectTableSort('model')" class="py-2.5 px-2 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 7%;" title="Haz clic para ordenar por Modelo">
+                                            <div class="flex items-center gap-1"><span>MODELO</span><span id="proj-sort-icon-model" class="text-slate-400">↕</span></div>
+                                        </th>
                                         <th class="py-2.5 px-2 font-extrabold text-right" style="width: 12%;">ACCIONES</th>
                                     </tr>
                                 </thead>
@@ -1248,21 +1268,95 @@
 
                     <!-- SUB-VISTA 2: NÓMINA DE ESTUDIANTES REGISTRADOS POR PROYECTO -->
                     <div id="admin-subview-students-container" class="hidden">
-                        <div class="mb-4">
-                            <input type="text" id="admin-students-search-input" oninput="renderAdminStudentsView()" class="app-input" placeholder="Buscar estudiante por nombre, equipo o proyecto...">
+                        <!-- Barra de Búsqueda, Filtros y Ordenamiento de Estudiantes -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 mb-3">
+                            <div class="sm:col-span-4">
+                                <input type="text" id="admin-students-search-input" oninput="renderAdminStudentsView()" class="app-input text-xs" placeholder="Buscar estudiante, equipo o proyecto...">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <select id="admin-students-filter-team" onchange="renderAdminStudentsView()" class="app-input text-xs">
+                                    <option value="">Todos los Equipos</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <select id="admin-students-filter-solution" onchange="renderAdminStudentsView()" class="app-input text-xs">
+                                    <option value="">Todas las Soluciones</option>
+                                    <option value="Artefacto Interactivo">Artefacto Interactivo</option>
+                                    <option value="Plataforma web / Aplicación">Plataforma web / Aplicación</option>
+                                    <option value="Dashboard / Panel de gestión">Dashboard / Panel de gestión</option>
+                                    <option value="Script / Automatización">Script / Automatización</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <select id="admin-students-filter-model" onchange="renderAdminStudentsView()" class="app-input text-xs">
+                                    <option value="">Todos los Modelos</option>
+                                    <option value="ChatGPT">ChatGPT</option>
+                                    <option value="Gemini">Gemini</option>
+                                    <option value="Claude">Claude</option>
+                                    <option value="Copilot">Copilot</option>
+                                    <option value="DeepSeek">DeepSeek</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                            <div class="sm:col-span-2">
+                                <select id="admin-students-sort-select" onchange="handleStudentSortSelectChange(this.value)" class="app-input text-xs font-semibold">
+                                    <option value="student:asc">Ordenar: Estudiante (A-Z)</option>
+                                    <option value="student:desc">Ordenar: Estudiante (Z-A)</option>
+                                    <option value="team:asc">Ordenar: Equipo (A-Z)</option>
+                                    <option value="team:desc">Ordenar: Equipo (Z-A)</option>
+                                    <option value="projectTitle:asc">Ordenar: Proyecto (A-Z)</option>
+                                    <option value="projectTitle:desc">Ordenar: Proyecto (Z-A)</option>
+                                    <option value="solution:asc">Ordenar: Solución (A-Z)</option>
+                                    <option value="model:asc">Ordenar: Modelo IA (A-Z)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Barra informativa de resultados y botón limpiar filtros -->
+                        <div class="flex items-center justify-between gap-2 mb-3 text-xs text-slate-500 dark:text-slate-400">
+                            <span id="admin-students-results-info" class="font-medium">Mostrando estudiantes registrados</span>
+                            <button type="button" id="admin-students-clear-btn" onclick="resetAdminStudentsFilters()" class="hidden px-2.5 py-1 rounded-lg bg-slate-200/80 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-bold transition cursor-pointer">
+                                Limpiar filtros
+                            </button>
                         </div>
 
                         <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 mb-6 w-full">
                             <table class="w-full text-left border-collapse text-[11px] table-fixed" style="table-layout: fixed; width: 100%;">
                                 <thead>
-                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700">
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 5%;">N°</th>
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 24%;">ESTUDIANTE</th>
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 16%;">EQUIPO</th>
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 25%;">PROYECTO</th>
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 14%;">TIPO SOLUCIÓN</th>
-                                        <th class="py-2.5 px-3 font-extrabold" style="width: 9%;">MODELO</th>
-                                        <th class="py-2.5 px-3 font-extrabold text-right" style="width: 7%;">FICHA</th>
+                                    <tr class="bg-slate-100 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 font-display uppercase tracking-wider text-[10px] border-b border-slate-200 dark:border-slate-700 select-none">
+                                        <th class="py-2.5 px-2.5 font-extrabold" style="width: 5%;">N°</th>
+                                        <th onclick="toggleStudentTableSort('student')" class="py-2.5 px-2.5 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 23%;" title="Haz clic para ordenar por Estudiante">
+                                            <div class="flex items-center gap-1">
+                                                <span>ESTUDIANTE</span>
+                                                <span id="sort-icon-student" class="text-blue-600 dark:text-blue-400">↑</span>
+                                            </div>
+                                        </th>
+                                        <th onclick="toggleStudentTableSort('team')" class="py-2.5 px-2.5 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 16%;" title="Haz clic para ordenar por Equipo">
+                                            <div class="flex items-center gap-1">
+                                                <span>EQUIPO</span>
+                                                <span id="sort-icon-team" class="text-slate-400">↕</span>
+                                            </div>
+                                        </th>
+                                        <th onclick="toggleStudentTableSort('projectTitle')" class="py-2.5 px-2.5 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 24%;" title="Haz clic para ordenar por Proyecto">
+                                            <div class="flex items-center gap-1">
+                                                <span>PROYECTO</span>
+                                                <span id="sort-icon-projectTitle" class="text-slate-400">↕</span>
+                                            </div>
+                                        </th>
+                                        <th onclick="toggleStudentTableSort('solution')" class="py-2.5 px-2.5 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 15%;" title="Haz clic para ordenar por Tipo de Solución">
+                                            <div class="flex items-center gap-1">
+                                                <span>TIPO SOLUCIÓN</span>
+                                                <span id="sort-icon-solution" class="text-slate-400">↕</span>
+                                            </div>
+                                        </th>
+                                        <th onclick="toggleStudentTableSort('model')" class="py-2.5 px-2.5 font-extrabold cursor-pointer hover:bg-slate-200/70 dark:hover:bg-slate-700/60 transition" style="width: 10%;" title="Haz clic para ordenar por Modelo IA">
+                                            <div class="flex items-center gap-1">
+                                                <span>MODELO</span>
+                                                <span id="sort-icon-model" class="text-slate-400">↕</span>
+                                            </div>
+                                        </th>
+                                        <th class="py-2.5 px-2.5 font-extrabold text-right" style="width: 7%;">FICHA</th>
                                     </tr>
                                 </thead>
                                 <tbody id="admin-students-table-body" class="divide-y divide-slate-200 dark:divide-slate-800">
@@ -2443,12 +2537,54 @@
             }).join('');
         }
 
+        let currentAdminSubView = 'fichas';
+        let studentSortState = { field: 'student', dir: 'asc' };
+        let projectSortState = { field: 'teamName', dir: 'asc' };
+
+        function handleProjectSortSelectChange(val) {
+            const [field, dir] = (val || 'teamName:asc').split(':');
+            projectSortState = { field: field || 'teamName', dir: dir || 'asc' };
+            renderAdminProjectsView();
+        }
+
+        function toggleProjectTableSort(field) {
+            if (projectSortState.field === field) {
+                projectSortState.dir = projectSortState.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                projectSortState.field = field;
+                projectSortState.dir = 'asc';
+            }
+            const selectEl = document.getElementById('admin-projects-sort-select');
+            if (selectEl) {
+                const candidate = `${projectSortState.field}:${projectSortState.dir}`;
+                if ([...selectEl.options].some(o => o.value === candidate)) {
+                    selectEl.value = candidate;
+                }
+            }
+            renderAdminProjectsView();
+        }
+
+        function updateProjectSortIcons() {
+            const fields = ['projectTitle', 'members', 'target', 'solution', 'model'];
+            fields.forEach(f => {
+                const el = document.getElementById(`proj-sort-icon-${f}`);
+                if (!el) return;
+                if (projectSortState.field === f) {
+                    el.textContent = projectSortState.dir === 'asc' ? '↑' : '↓';
+                    el.className = 'text-blue-600 dark:text-blue-400 font-extrabold';
+                } else {
+                    el.textContent = '↕';
+                    el.className = 'text-slate-400';
+                }
+            });
+        }
+
         function getFilteredAdminProjects() {
             const q = (document.getElementById('admin-search-input')?.value || '').trim().toLowerCase();
             const solFilter = document.getElementById('admin-filter-solution')?.value || '';
             const modFilter = document.getElementById('admin-filter-model')?.value || '';
 
-            return projectsList.filter(p => {
+            const filtered = projectsList.filter(p => {
                 if (solFilter && p.toolType !== solFilter) return false;
                 if (modFilter && p.aiModel !== modFilter) return false;
                 if (q) {
@@ -2466,9 +2602,27 @@
                 }
                 return true;
             });
-        }
 
-        let currentAdminSubView = 'fichas';
+            filtered.sort((a, b) => {
+                const getVal = (proj) => {
+                    switch (projectSortState.field) {
+                        case 'teamName': return (proj.teamName || '').trim();
+                        case 'projectTitle': return (proj.projectTitle || '').trim();
+                        case 'members': return getFormattedMembers(proj);
+                        case 'target': return (proj.target || '').trim();
+                        case 'solution': return getFormattedSolutionType(proj);
+                        case 'model': return getFormattedModel(proj);
+                        default: return (proj.teamName || '').trim();
+                    }
+                };
+                const valA = getVal(a);
+                const valB = getVal(b);
+                const cmp = valA.localeCompare(valB, 'es', { sensitivity: 'base' });
+                return projectSortState.dir === 'asc' ? cmp : -cmp;
+            });
+
+            return filtered;
+        }
 
         function updateAdminCountsBadges() {
             const badgeProj = document.getElementById('badge-count-projects');
@@ -2516,14 +2670,66 @@
             updateAdminCountsBadges();
         }
 
+        function handleStudentSortSelectChange(val) {
+            const [field, dir] = (val || 'student:asc').split(':');
+            studentSortState = { field: field || 'student', dir: dir || 'asc' };
+            renderAdminStudentsView();
+        }
+
+        function toggleStudentTableSort(field) {
+            if (studentSortState.field === field) {
+                studentSortState.dir = studentSortState.dir === 'asc' ? 'desc' : 'asc';
+            } else {
+                studentSortState.field = field;
+                studentSortState.dir = 'asc';
+            }
+            const selectEl = document.getElementById('admin-students-sort-select');
+            if (selectEl) {
+                const candidate = `${studentSortState.field}:${studentSortState.dir}`;
+                if ([...selectEl.options].some(o => o.value === candidate)) {
+                    selectEl.value = candidate;
+                }
+            }
+            renderAdminStudentsView();
+        }
+
+        function resetAdminStudentsFilters() {
+            const sInput = document.getElementById('admin-students-search-input');
+            const tSelect = document.getElementById('admin-students-filter-team');
+            const solSelect = document.getElementById('admin-students-filter-solution');
+            const modSelect = document.getElementById('admin-students-filter-model');
+            const sortSelect = document.getElementById('admin-students-sort-select');
+            if (sInput) sInput.value = '';
+            if (tSelect) tSelect.value = '';
+            if (solSelect) solSelect.value = '';
+            if (modSelect) modSelect.value = '';
+            if (sortSelect) sortSelect.value = 'student:asc';
+            studentSortState = { field: 'student', dir: 'asc' };
+            renderAdminStudentsView();
+        }
+
+        function updateStudentSortIcons() {
+            const fields = ['student', 'team', 'projectTitle', 'solution', 'model'];
+            fields.forEach(f => {
+                const el = document.getElementById(`sort-icon-${f}`);
+                if (!el) return;
+                if (studentSortState.field === f) {
+                    el.textContent = studentSortState.dir === 'asc' ? '↑' : '↓';
+                    el.className = 'text-blue-600 dark:text-blue-400 font-extrabold';
+                } else {
+                    el.textContent = '↕';
+                    el.className = 'text-slate-400';
+                }
+            });
+        }
+
         function renderAdminStudentsView() {
             const tbody = document.getElementById('admin-students-table-body');
             if (!tbody) return;
 
-            const searchInput = document.getElementById('admin-students-search-input');
-            const q = (searchInput?.value || '').trim().toLowerCase();
-
             let allStudents = [];
+            const teamsSet = new Set();
+
             projectsList.forEach((p, pIdx) => {
                 const team = (p.teamName || `Equipo ${pIdx + 1}`).trim();
                 const projTitle = (p.projectTitle || 'Sin título aún').trim();
@@ -2531,48 +2737,93 @@
                 const model = getFormattedModel(p);
                 const members = (p.members || []).map(m => (m || '').trim()).filter(Boolean);
 
+                if (members.length > 0) {
+                    teamsSet.add(team);
+                }
+
                 members.forEach(member => {
                     allStudents.push({
                         student: member,
                         team,
                         projectTitle: projTitle,
                         solution,
+                        rawToolType: p.toolType || '',
                         model,
+                        rawAiModel: p.aiModel || '',
                         projectId: p.id
                     });
                 });
             });
 
-            // Ordenar alfabéticamente por estudiante
-            allStudents.sort((a, b) => a.student.localeCompare(b.student));
+            // Poblar selector dinámico de Equipos conservando selección actual
+            const teamSelect = document.getElementById('admin-students-filter-team');
+            const currentTeamFilter = teamSelect ? teamSelect.value : '';
+            if (teamSelect) {
+                const sortedTeams = [...teamsSet].sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+                teamSelect.innerHTML = `<option value="">Todos los Equipos</option>` +
+                    sortedTeams.map(t => `<option value="${escapeHtml(t)}" ${t === currentTeamFilter ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('');
+            }
 
-            const filtered = q ? allStudents.filter(item => {
-                const text = `${item.student} ${item.team} ${item.projectTitle} ${item.solution} ${item.model}`.toLowerCase();
-                return text.includes(q);
-            }) : allStudents;
+            const q = (document.getElementById('admin-students-search-input')?.value || '').trim().toLowerCase();
+            const teamFilter = document.getElementById('admin-students-filter-team')?.value || '';
+            const solFilter = document.getElementById('admin-students-filter-solution')?.value || '';
+            const modFilter = document.getElementById('admin-students-filter-model')?.value || '';
+
+            const filtered = allStudents.filter(item => {
+                if (teamFilter && item.team !== teamFilter) return false;
+                if (solFilter && item.rawToolType !== solFilter && !item.solution.includes(solFilter)) return false;
+                if (modFilter && item.rawAiModel !== modFilter && !item.model.includes(modFilter)) return false;
+                if (q) {
+                    const text = `${item.student} ${item.team} ${item.projectTitle} ${item.solution} ${item.model}`.toLowerCase();
+                    if (!text.includes(q)) return false;
+                }
+                return true;
+            });
+
+            // Aplicar ordenamiento seleccionado
+            filtered.sort((a, b) => {
+                const valA = (a[studentSortState.field] || '').toString();
+                const valB = (b[studentSortState.field] || '').toString();
+                const cmp = valA.localeCompare(valB, 'es', { sensitivity: 'base' });
+                return studentSortState.dir === 'asc' ? cmp : -cmp;
+            });
+
+            updateStudentSortIcons();
+
+            // Actualizar contador e indicador de filtros activos
+            const infoEl = document.getElementById('admin-students-results-info');
+            const clearBtn = document.getElementById('admin-students-clear-btn');
+            const hasActiveFilter = Boolean(q || teamFilter || solFilter || modFilter || studentSortState.field !== 'student' || studentSortState.dir !== 'asc');
+            if (infoEl) {
+                infoEl.textContent = `Mostrando ${filtered.length} de ${allStudents.length} ${allStudents.length === 1 ? 'estudiante registrado' : 'estudiantes registrados'}`;
+            }
+            if (clearBtn) {
+                if (hasActiveFilter) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No se encontraron estudiantes registrados${q ? ' con la búsqueda actual' : ''}.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No se encontraron estudiantes registrados con los filtros seleccionados.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filtered.map((item, idx) => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
-                    <td class="py-2.5 px-3 font-mono text-slate-400 text-[10px]">${idx + 1}</td>
-                    <td class="py-2.5 px-3 font-bold text-slate-800 dark:text-slate-100 truncate" title="${escapeHtml(item.student)}">
+                    <td class="py-2.5 px-2.5 font-mono text-slate-400 text-[10px]">${idx + 1}</td>
+                    <td class="py-2.5 px-2.5 font-bold text-slate-800 dark:text-slate-100 truncate" title="${escapeHtml(item.student)}">
                         <div class="flex items-center gap-1.5">
                             <span class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"></span>
                             <span class="truncate">${escapeHtml(item.student)}</span>
                         </div>
                     </td>
-                    <td class="py-2.5 px-3 text-blue-600 dark:text-blue-400 font-semibold truncate" title="${escapeHtml(item.team)}">${escapeHtml(item.team)}</td>
-                    <td class="py-2.5 px-3 text-slate-700 dark:text-slate-300 truncate" title="${escapeHtml(item.projectTitle)}">${escapeHtml(item.projectTitle)}</td>
-                    <td class="py-2.5 px-3">
-                        <span class="inline-block px-2 py-0.5 rounded bg-teal-500/10 text-teal-700 dark:text-teal-300 font-semibold text-[10px] truncate max-w-[140px]" title="${escapeHtml(item.solution)}">${escapeHtml(item.solution)}</span>
+                    <td class="py-2.5 px-2.5 text-blue-600 dark:text-blue-400 font-semibold truncate" title="${escapeHtml(item.team)}">${escapeHtml(item.team)}</td>
+                    <td class="py-2.5 px-2.5 text-slate-700 dark:text-slate-300 truncate" title="${escapeHtml(item.projectTitle)}">${escapeHtml(item.projectTitle)}</td>
+                    <td class="py-2.5 px-2.5 overflow-hidden">
+                        <span class="block px-2 py-0.5 rounded bg-teal-500/10 text-teal-700 dark:text-teal-300 font-semibold text-[10px] truncate max-w-full" title="${escapeHtml(item.solution)}">${escapeHtml(item.solution)}</span>
                     </td>
-                    <td class="py-2.5 px-3 font-semibold text-slate-600 dark:text-slate-300 truncate text-[10px]" title="${escapeHtml(item.model)}">${escapeHtml(item.model)}</td>
-                    <td class="py-2.5 px-3 text-right">
-                        <button type="button" onclick="openDetailModal('${item.projectId}')" class="px-2 py-1 rounded bg-blue-600/10 hover:bg-blue-600 text-blue-600 hover:text-white text-xs font-bold transition cursor-pointer" title="Ver Ficha">Ver</button>
+                    <td class="py-2.5 px-2.5 font-semibold text-slate-600 dark:text-slate-300 truncate text-[10px]" title="${escapeHtml(item.model)}">${escapeHtml(item.model)}</td>
+                    <td class="py-2.5 px-2.5 text-right">
+                        <button type="button" onclick="openDetailModal('${item.projectId}')" class="px-2 py-1 rounded bg-blue-600/10 hover:bg-blue-600 text-blue-600 hover:text-white text-[10px] font-bold transition cursor-pointer" title="Ver Ficha">Ver</button>
                     </td>
                 </tr>
             `).join('');
@@ -2585,6 +2836,7 @@
             const cardsGrid = document.getElementById('admin-projects-cards-grid');
 
             updateAdminCountsBadges();
+            updateProjectSortIcons();
 
             if (filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-500">No se encontraron fichas con los criterios seleccionados.</td></tr>`;
